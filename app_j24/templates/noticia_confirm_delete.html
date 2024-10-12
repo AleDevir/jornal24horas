@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+{% block content %}
+{% load static %}
+
+<div class="d-flex col  justify-content-center ">
+    <P class="justify-content-center fs-2 text-info">Confirma a exclusão da notícia?</p>
+</div>
+
+
+<div class="d-flex col  justify-content-center ">
+  
+        <div class="mb-3">
+            <form method="post">
+                {% csrf_token %}
+                <h1>{{ noticia.titulo }}</h1>
+                <a href="javascript:history.back()"  class="mb-3   text-decoration-none btn btn-outline-info">Não</a>    
+                <button value="Submit"  class="btn btn-outline-info w-100" type="submit">Sim, excluir</button>
+            </form>
+        </div>    
+</div>
+
+{% endblock %}

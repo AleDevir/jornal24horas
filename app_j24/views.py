@@ -14,7 +14,7 @@ from django.shortcuts import (
 from django.http import Http404
 from django.urls import reverse
 from django.views.generic import  DetailView, ListView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from .models import Categoria, Noticia
 from .forms import NoticiaForm, PesquisarNoticiaForm
 
@@ -34,6 +34,22 @@ class NoticiaCreate(PermissionRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse('exibir_noticias')
+
+class NoticiaUpdate(NoticiaCreate, UpdateView):
+    '''
+    Atualiza a Notícia
+    '''
+    pass
+
+class NoticiaDelete(DeleteView):
+    '''
+    Atualiza a Notícia
+    '''
+    model = Noticia
+    template_name = 'noticia_confirm_delete.html'
+    def get_success_url(self):
+        return reverse('exibir_noticias')
+
 
 class HomeListView(ListView):
     '''
@@ -82,52 +98,3 @@ def pesquisar_noticias(request) -> HttpResponse:
     return render(request, 'noticias_filtradas.html', {
         "object_list": noticias,
     })
-
-def edit_noticia(request, noticia_id: int) -> HttpResponse:
-    '''
-    Editar notícia
-    '''
-    try:
-        uma_noticia = Noticia.objects.get(pk=noticia_id)
-    except Noticia.DoesNotExist as not_found:
-        raise Http404(
-            f"Notícia não encontrada! A noticícia de ID={noticia_id} não existe na base de dados."
-        ) from not_found
-
-    contexto = {
-        'noticia': uma_noticia,
-        'form': NoticiaForm(instance=uma_noticia),
-    }
-    return render(request, 'noticia_edit.html', context=contexto)
-
-def noticia_edit_save(request, noticia_id: int) -> HttpResponse:
-    '''
-    Salvar edição de noticia
-    '''
-    try:
-        uma_noticia = Noticia.objects.get(pk=noticia_id)
-    except Noticia.DoesNotExist as not_found:
-        raise Http404(
-            f"Notícia não encontrada! A notícia de ID={noticia_id} não existe na base de dados."
-        ) from not_found
-    if request.method == 'POST':
-        form = NoticiaForm(request.POST, request.FILES, instance=uma_noticia)
-        if form.is_valid():
-            form.instance.autor = request.user
-            form.save()
-    return HttpResponseRedirect(reverse('exibir_noticias'))
-
-def noticia_delete(request, noticia_id: int) -> HttpResponse:
-    '''
-    Deletar Noticia
-    '''
-    try:
-        uma_noticia = Noticia.objects.get(pk=noticia_id)
-        uma_noticia.delete()
-    except Noticia.DoesNotExist as not_found:
-        print(not_found)
-        raise Http404(
-            f"Notícia não encontrada! A notícia de ID={noticia_id} não existe na base de dados."
-        ) from not_found
-
-    return HttpResponseRedirect(reverse('exibir_noticias'))
