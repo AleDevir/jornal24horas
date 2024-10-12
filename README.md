@@ -6,3 +6,9 @@ pip install -r requirements.txt
 mypy --install-types
 
 ```
+
+## pylint
+```
+pylint --load-plugins pylint_django --django-settings-module=projeto_j24.settings projeto_j24 app_j24
+
+```

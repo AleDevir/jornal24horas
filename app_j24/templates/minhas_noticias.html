@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+{% block content %}
+
+<div class="table-responsive mt-5">
+  <a class="btn btn-outline-info" href="{% url 'cadastro-noticias' %}">Adicionar</a>
+    <table class="table table-dark table-hover opacity-75">
+        <thead class="text-info">
+          <tr >
+            <th scope="col" class="text-info">Titulo</th>
+            <th scope="col" class="text-info">Categotia</th>
+            <th scope="col" class="text-info">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for noticia in exibir_noticias%}
+            <td>{{noticia.titulo}}</td>    
+            <td>{{noticia.categoria}}</td>    
+            <td>
+                <div>
+                  <a >
+                    <img src="/static/icones/edit.png" width="22" height="22"/>
+                  </a>
+                    
+                    <img src="/static/icones/excluir.png" width="22" height="22"/>
+                </div>
+            </td>    
+          </tr>
+          {% endfor %}
+        </tbody>
+    </table>
+    </div>
+
+
+{% endblock %}
