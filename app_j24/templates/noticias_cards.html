@@ -1,0 +1,21 @@
+
+{% load django_bootstrap5 %}
+{% load static %}
+
+
+<div class="row mt-3">
+            {% for uma_noticia in object_list %}
+            <a href="{% url 'noticia-detail' uma_noticia.id %}" class="text-decoration-none">
+                <div class="col-xl-2 col-lg-3 col-sm-4 col p-2">
+                    <div class="  ratio ratio-16x9 " style="object-fit: contain;">
+                        <img src="/media/{{uma_noticia.imagem}}"  width="200"  class="rounded" alt="{{uma_noticia.titulo}}" > 
+                    </div>     
+
+                    <p class="">{{uma_noticia.titulo}}</p>        
+                    <p class="text-capitalize text-justify text-secondary">Em {{uma_noticia.categoria}}</p>    
+            </div>
+        </a>
+            {% endfor %}
+    
+</div> 
+

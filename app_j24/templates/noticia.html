@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+{% block content %}
+{% load static %}
+
+
+<div class="m-4 justify-content-center  align-items-center w-50 ">
+        <img src="/media/{{noticia.imagem}}"    class="rounded w-100" alt="{{uma_noticia.titulo}}" > 
+        <p class="text-capitalize text-justify text-secondary">Em {{noticia.categoria}}</p>    
+        <p class="text-secondary">Publicada por {{noticia.autor}}</p>
+        <p class="text-secondary">Em {{noticia.criado_em}}</p>
+        <p >{{noticia.titulo}}</p>        
+        <p >{{noticia.conteudo}}</p>        
+      
+</div>
+
+{% endblock %}
