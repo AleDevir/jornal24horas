@@ -16,8 +16,9 @@
 <div class="d-flex col  justify-content-center ">
   
         <div class="mb-3">
-            <form action="{% url 'edit_noticia' noticia.id %}" method="post">
+            <form action="{% url 'noticia_edit_save' noticia.id %}" method="post">
                 {% csrf_token %}
+                <h1>{{ noticia.titulo}}</h1>
                 {% bootstrap_form form %}
                 <button value="Submit"  class="btn btn-outline-info w-100" type="submit">Enviar</button>
             </form>

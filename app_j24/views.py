@@ -13,10 +13,10 @@ from django.shortcuts import (
 
 from django.http import Http404
 from django.urls import reverse
-from django.views.generic import  ListView, DetailView
+from django.views.generic import  DetailView, ListView
 from django.views.generic.edit import CreateView
-from .models import Noticia
-from .forms import PesquisarNoticiaForm
+from .models import Categoria, Noticia
+from .forms import NoticiaForm, PesquisarNoticiaForm
 
 
 class NoticiaCreate(PermissionRequiredMixin, CreateView):
@@ -51,7 +51,6 @@ class NoticiaDetailView(DetailView):
     model = Noticia
     template_name = 'noticia.html'
 
-
 @login_required(login_url="/accounts/login/")
 @permission_required("app_j24.autor_noticia")
 def exibir_noticias(request) -> HttpResponse:
@@ -72,11 +71,23 @@ def exibir_noticias(request) -> HttpResponse:
         "exibir_noticias": lista,
     })
 
+def pesquisar_noticias(request) -> HttpResponse:
+    '''
+    Pesquisar Notícias
+    '''
+    titulo = request.POST['titulo']
+    noticias = Noticia.objects.filter(titulo__icontains=titulo)
+
+    lista = Noticia.objects.filter(autor=request.user)
+    return render(request, 'noticias_filtradas.html', {
+        "object_list": noticias,
+    })
+
+
 def edit_noticia(request, noticia_id: int) -> HttpResponse:
     '''
     Editar notícia
     '''
-   
     try:
         uma_noticia = Noticia.objects.get(pk=noticia_id)
     except Noticia.DoesNotExist as not_found:
@@ -85,7 +96,8 @@ def edit_noticia(request, noticia_id: int) -> HttpResponse:
         ) from not_found
 
     contexto = {
-        'noticia': uma_noticia
+        'noticia': uma_noticia,
+        'form': NoticiaForm(instance=uma_noticia),
     }
     return render(request, 'noticia_edit.html', context=contexto)
 
@@ -94,20 +106,27 @@ def noticia_edit_save(request, noticia_id: int) -> HttpResponse:
     Salvar edição de noticia
     '''
     try:
-        if noticia_id == 0:
-            uma_noticia = Noticia.objects.create(criado_em=datetime.now())
-        else:
-            uma_noticia = Noticia.objects.get(pk=noticia_id)
+        uma_noticia = Noticia.objects.get(pk=noticia_id)
     except Noticia.DoesNotExist as not_found:
         raise Http404(
             f"Notícia não encontrada! A notícia de ID={noticia_id} não existe na base de dados."
         ) from not_found
-    
+
+    categoria_id = request.POST["categoria"]
+    categoria = None
+    if categoria_id:
+        try:
+            categoria = Categoria.objects.get(pk=categoria_id)
+        except Categoria.DoesNotExist as not_found:
+            raise Http404(
+                f"Categoria inválida! A categoria informada de ID={categoria_id} não existe na base de dados."
+            ) from not_found
+
     uma_noticia.titulo = request.POST["titulo"]
     uma_noticia.subtitulo = request.POST["subtitulo"]
     uma_noticia.conteudo = request.POST["conteudo"]
     uma_noticia.imagem = request.POST["imagem"]
-    uma_noticia.categoria = request.POST["categoria"]
+    uma_noticia.categoria = categoria
 
     uma_noticia.save()
     return HttpResponseRedirect(reverse('exibir_noticias'))
