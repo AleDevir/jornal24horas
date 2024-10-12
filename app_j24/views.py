@@ -83,7 +83,6 @@ def pesquisar_noticias(request) -> HttpResponse:
         "object_list": noticias,
     })
 
-
 def edit_noticia(request, noticia_id: int) -> HttpResponse:
     '''
     Editar notícia
@@ -111,24 +110,11 @@ def noticia_edit_save(request, noticia_id: int) -> HttpResponse:
         raise Http404(
             f"Notícia não encontrada! A notícia de ID={noticia_id} não existe na base de dados."
         ) from not_found
-
-    categoria_id = request.POST["categoria"]
-    categoria = None
-    if categoria_id:
-        try:
-            categoria = Categoria.objects.get(pk=categoria_id)
-        except Categoria.DoesNotExist as not_found:
-            raise Http404(
-                f"Categoria inválida! A categoria informada de ID={categoria_id} não existe na base de dados."
-            ) from not_found
-
-    uma_noticia.titulo = request.POST["titulo"]
-    uma_noticia.subtitulo = request.POST["subtitulo"]
-    uma_noticia.conteudo = request.POST["conteudo"]
-    uma_noticia.imagem = request.POST["imagem"]
-    uma_noticia.categoria = categoria
-
-    uma_noticia.save()
+    if request.method == 'POST':
+        form = NoticiaForm(request.POST, request.FILES, instance=uma_noticia)
+        if form.is_valid():
+            form.instance.autor = request.user
+            form.save()
     return HttpResponseRedirect(reverse('exibir_noticias'))
 
 def noticia_delete(request, noticia_id: int) -> HttpResponse:

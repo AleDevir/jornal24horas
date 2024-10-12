@@ -16,7 +16,7 @@
 <div class="d-flex col  justify-content-center ">
   
         <div class="mb-3">
-            <form  method="post">
+            <form  method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {% bootstrap_form form %}
                 <button value="Submit"  class="btn btn-outline-info w-100" type="submit">Enviar</button>
