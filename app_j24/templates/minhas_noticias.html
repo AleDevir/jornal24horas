@@ -18,11 +18,13 @@
             <td>{{noticia.categoria}}</td>    
             <td>
                 <div>
-                  <a >
+                  <a href="{% url 'edit_noticia' noticia.id %}" >
                     <img src="/static/icones/edit.png" width="22" height="22"/>
                   </a>
-                    
+
+                  <a href="{% url 'noticia_delete' noticia.id %}" >
                     <img src="/static/icones/excluir.png" width="22" height="22"/>
+                  </a>
                 </div>
             </td>    
           </tr>

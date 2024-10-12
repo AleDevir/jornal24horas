@@ -5,8 +5,10 @@
 {% static 'icones/logout.png' as logout_url %}
 
 <div class="sticky-top  bg-body border-bottom">
-    <div class="  hstack d-flex">    
-      <div class="text-ligth m-3 p-2 rounded-circle btn btn-outline-info">J24</div>
+    <div class="  hstack d-flex">  
+      <a href="{% url 'home' %}">
+        <div class="text-ligth m-3 p-2 rounded-circle btn btn-outline-info">J24</div>
+      </a>  
         {% if user.is_authenticated %}
           <div class="dropdown ms-auto px-4">
               <button class="btn btn-outline-info dropdown-toggle  " type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -68,9 +70,10 @@
               </li>
             </ul>
           
-            <form class="d-flex" role="search"  method="POST">
+            <form  class="d-flex" role="search"  >
               {% csrf_token %}
-              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+             
+              <!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"> -->
               <button class="btn btn-outline-info" type="submit">Search</button>
             </form>
           </div>
@@ -79,10 +82,10 @@
       </nav>
       <div class="d-flex justify-content-end p-3 text-info">
         Compartilhar
-        <a href="https://web.facebook.com/?locale=pt_BR&_rdc=1&_rdr" target="_blank" >
+        <a href="https://www.whatsapp.com/?lang=pt_BR" target="_blank" >
           <img src="{% static 'icones/whatsapp.png' %}" alt="logo" width="50" class="px-3" style="color: aqua;">
         </a>
-        <a href="https://web.facebook.com/?locale=pt_BR&_rdc=1&_rdr" target="_blank" >
+        <a href="https://www.instagram.com/" target="_blank" >
           <img src="{% static 'icones/instagram.png' %}" alt="logo" width="50" class="px-3" style="color: aqua;">
         </a>
         <a href="https://web.facebook.com/?locale=pt_BR&_rdc=1&_rdr" target="_blank" >

@@ -23,6 +23,18 @@ class CriarUsuarioForm(UserCreationForm):
         fields = ['username', 'email', 'password1', 'password2']
 
 
+class NoticiaForm(ModelForm):
+    '''
+    Noticia
+    '''
+    class Meta:
+        '''
+        Metamodelo
+        '''
+        model = Noticia
+        fields = ['titulo', 'subtitulo', 'conteudo',  'categoria', 'imagem']
+
+
 class PesquisarNoticiaForm(ModelForm):
     '''
     Pesquisar Noticia
