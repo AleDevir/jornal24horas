@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+{% block content %}
+
+<div class="container">
+    <div class="table-responsive mt-5">
+        {% if perms.app_j24.noticia_criar %}
+        <a class="btn btn-outline-info" href="{% url 'cadastro-noticias' %}">Adicionar</a>
+        {% endif %}
+        <table class="table table-dark table-hover opacity-75">
+            <thead class="text-info justify-content-center">
+                <tr>
+                    {% if perms.app_j24.pode_publicar %}
+                    <th scope="col" class="text-info">Publicada</th>
+                    {% endif %}
+                    <th scope="col" class="text-info">Titulo</th>
+                    <th scope="col" class="text-info">Categotia</th>
+                    <th scope="col" class="text-info">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for noticia in noticias %}
+                {% if perms.app_j24.pode_publicar %}
+                <td>
+                    <div class="form-check form-switch p-0 ">
+                        {% if noticia.publicada %}
+                        <a href="{% url 'publicar_noticia' noticia_id=noticia.id publicado=0 %}">
+                            <img src="/static/icones/checked.png" width="22" height="22" />
+                        </a>
+                        {% else %}
+                        <a href="{% url 'publicar_noticia' noticia_id=noticia.id publicado=1 %}">
+                            <img src="/static/icones/cancel.png" width="22" height="22" />
+                        </a>
+                        {% endif %}
+                    </div>
+                </td>
+                {% endif %}
+                <td>{{noticia.titulo}}</td>
+                <td>{{noticia.categoria}}</td>
+                <td>
+                    <div class="d-flex justify-content-between">
+                        {% if perms.app_j24.noticia_alterar %}
+                        <a href="{% url 'atualizar-noticia' noticia.id %}">
+                            <img src="/static/icones/edit.png" width="22" height="22" />
+                        </a>
+                        {% endif %}
+                        {% if perms.app_j24.noticia_excluir %}
+                        <a href="{% url 'excluir-noticia' noticia.id %}">
+                            <img src="/static/icones/excluir.png" width="22" height="22" />
+                        </a>
+                        {% endif %}
+                    </div>
+                </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
