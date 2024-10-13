@@ -1,4 +1,3 @@
-
 {% load static %}
 {% load django_bootstrap5 %}
 {% static 'icones/user_edit.png' as editar_url %}
@@ -6,6 +5,7 @@
 {% static 'icones/logout.png' as logout_url %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,60 +14,63 @@
     {% bootstrap_css %}
     {% bootstrap_javascript %}
 </head>
-<body class="bg-body-primary " data-bs-theme="dark">
-    
-<div class="sticky-top  bg-body border-bottom">
-    <div class="  hstack d-flex">  
-      <a href="{% url 'home' %}">
-        <div class="text-ligth m-3 p-2 rounded-circle btn btn-outline-info">J24</div>
-      </a>  
-        {% if user.is_authenticated %}
-          <div class="dropdown ms-auto px-4">
-              <button class="btn btn-outline-info dropdown-toggle  " type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Olá, {{ user.get_username }}
-              </button>
-              <ul class="dropdown-menu">
-                <li class="dropdown-item d-flex "><img src="{{ editar_url}}" width="22" height="22"/>
-                  <button class="dropdown-item text-info" type="button">Editar dados</button>
-                </li>
-                <li class="dropdown-item d-flex "><img src="{{ senha_url}}" width="20"  height="20"/>
-                  <button class="dropdown-item text-info" type="button">Trocar senha</button>
-                </li>
-              
-                {% if perms.app_j24.noticia_criar %}
-                <li class="dropdown-item d-flex "><img src="{{ senha_url}}" width="20"  height="20"/>
-                  <a href="{% url 'noticias_autor' %}" class="dropdown-item text-info">Minhas noticias</a>
-                </li>
-                {% endif %}
-              
-                {% if perms.app_j24.pode_publicar %}
-                <li class="dropdown-item d-flex "><img src="{{ senha_url}}" width="20"  height="20"/>
-                  <a href="{% url 'editor_noticias' %}"  class="dropdown-item text-info" type="button">Publicar</a>
-                </li>
-                {% endif %}
-              
-                <li class="dropdown-item d-flex ">
-                  <img src="{{ logout_url}}" width="20" height="20"/>
-                  <form action="{% url 'logout' %}" method="post" >
-                    {% csrf_token %}
-                    <button type="submit" class=" dropdown-item text-info">Logout</button>
-                  </form>
-                </li>
-              </ul>
-          </div>
-        {% else %}
-          <a href="" class="px-3 ms-auto text-info text-decoration-none">Sign</a>
-          <a href="{% url 'login' %}" class="px-3 text-info text-decoration-none">Login</a>
 
-        {% endif %}    
+<body class="bg-body-primary " data-bs-theme="dark">
+
+    <div class="sticky-top  bg-body border-bottom border-info">
+        <div class="  hstack d-flex">
+            <a href="{% url 'home' %}">
+                <div class="text-ligth m-3 p-2 rounded-circle btn btn-outline-info">J24</div>
+            </a>
+            {% if user.is_authenticated %}
+            <div class="dropdown ms-auto px-4">
+                <button class="btn btn-outline-info dropdown-toggle  " type="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    Olá, {{ user.get_username }}
+                </button>
+                <ul class="dropdown-menu">
+                    <li class="dropdown-item d-flex "><img src="{{ editar_url}}" width="22" height="22" />
+                        <button class="dropdown-item text-info" type="button">Editar dados</button>
+                    </li>
+                    <li class="dropdown-item d-flex "><img src="{{ senha_url}}" width="20" height="20" />
+                        <button class="dropdown-item text-info" type="button">Trocar senha</button>
+                    </li>
+
+                    {% if perms.app_j24.noticia_criar %}
+                    <li class="dropdown-item d-flex "><img src="{{ senha_url}}" width="20" height="20" />
+                        <a href="{% url 'noticias' %}" class="dropdown-item text-info">Minhas noticias</a>
+                    </li>
+                    {% endif %}
+
+                    {% if perms.app_j24.pode_publicar %}
+                    <li class="dropdown-item d-flex "><img src="{{ senha_url}}" width="20" height="20" />
+                        <a href="{% url 'noticias' %}" class="dropdown-item text-info" type="button">Publicar</a>
+                    </li>
+                    {% endif %}
+
+                    <li class="dropdown-item d-flex ">
+                        <img src="{{ logout_url}}" width="20" height="20" />
+                        <form action="{% url 'logout' %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class=" dropdown-item text-info">Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+            {% else %}
+            <a href="" class="px-3 ms-auto text-info text-decoration-none">Sign</a>
+            <a href="{% url 'login' %}" class="px-3 text-info text-decoration-none">Login</a>
+
+            {% endif %}
+        </div>
+
+    </div>
+    <div>
+
+        {% block content %}{% endblock %}
+
     </div>
 
-</div>
-        <div >
-    
-             {% block content %}{% endblock %}
-        
-         </div>
-    
 </body>
+
 </html>

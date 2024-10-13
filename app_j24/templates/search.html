@@ -1,7 +1,7 @@
 {% load static %}
 {% load django_bootstrap5 %}
 
-<div class="">
+<div>
     <nav class="navbar navbar-expand-lg " style="background-color:#223140;">
         <div class="container-fluid">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -9,9 +9,9 @@
                 aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="collapse navbar-collapse " id="navbarSupportedContent">
 
-                <form action="{% url 'home' %}" class="d-flex" role="search" method="POST">
+                <form class="d-flex " role="search" method="POST">
                     {% csrf_token %}
                     <select class="form-select" name="categoria" aria-label="Default select example">
                         {% if categoria == 0 %}
@@ -30,6 +30,7 @@
                     <input class="form-control me-2" type="search" name="titulo" placeholder="Pesquisar Título"
                         aria-label="Search" value="{{titulo}}">
                     <button class="btn btn-outline-info" type="submit">Pesquisar</button>
+
                 </form>
             </div>
         </div>

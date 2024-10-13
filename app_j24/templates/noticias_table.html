@@ -4,6 +4,7 @@
 
 <div class="container">
     <div class="table-responsive mt-5">
+        {% include "search.html" %}
         {% if perms.app_j24.noticia_criar %}
         <a class="btn btn-outline-info" href="{% url 'cadastro-noticias' %}">Adicionar</a>
         {% endif %}
@@ -19,7 +20,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for noticia in noticias %}
+                {% for noticia in object_list %}
                 {% if perms.app_j24.pode_publicar %}
                 <td>
                     <div class="form-check form-switch p-0 ">
