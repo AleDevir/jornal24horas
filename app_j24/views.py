@@ -141,9 +141,10 @@ def noticias_autor(request) -> HttpResponse:
 
     lista = Noticia.objects.filter(autor=request.user)
     form = PesquisarNoticiaForm()
-    return render(request, 'minhas_noticias.html', {
+    return render(request, 'noticias_table.html', {
         "form": form,
-        "noticias_autor": lista,
+        # "noticias_autor": lista,
+        "noticias": lista,
     })
 
 @login_required(login_url="/accounts/login/")
@@ -154,9 +155,10 @@ def editor_noticias(request) -> HttpResponse:
     '''
     lista = Noticia.objects.all()
     form = PesquisarNoticiaForm()
-    return render(request, 'editor_noticias.html', {
+    return render(request, 'noticias_table.html', {
         "form": form,
-        "editor_noticias": lista,
+        # "editor_noticias": lista,
+        "noticias": lista,
     })
 
 

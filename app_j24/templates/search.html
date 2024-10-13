@@ -1,92 +1,37 @@
 {% load static %}
 {% load django_bootstrap5 %}
-{% static 'icones/user_edit.png' as editar_url %}
-{% static 'icones/senha.png' as senha_url %}
-{% static 'icones/logout.png' as logout_url %}
 
-<div class="sticky-top  bg-body border-bottom">
-    <div class="  hstack d-flex">  
-      <a href="{% url 'home' %}">
-        <div class="text-ligth m-3 p-2 rounded-circle btn btn-outline-info">J24</div>
-      </a>  
-        {% if user.is_authenticated %}
-          <div class="dropdown ms-auto px-4">
-              <button class="btn btn-outline-info dropdown-toggle  " type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Olá, {{ user.get_username }}
-              </button>
-              <ul class="dropdown-menu">
-                <li class="dropdown-item d-flex "><img src="{{ editar_url}}" width="22" height="22"/>
-                  <button class="dropdown-item text-info" type="button">Editar dados</button>
-                </li>
-                <li class="dropdown-item d-flex "><img src="{{ senha_url}}" width="20"  height="20"/>
-                  <button class="dropdown-item text-info" type="button">Trocar senha</button>
-                </li>
-              
-                {% if perms.app_j24.noticia_criar %}
-                <li class="dropdown-item d-flex "><img src="{{ senha_url}}" width="20"  height="20"/>
-                  <a href="{% url 'noticias_autor' %}" class="dropdown-item text-info">Minhas noticias</a>
-                </li>
-                {% endif %}
-              
-                {% if perms.app_j24.pode_publicar %}
-                <li class="dropdown-item d-flex "><img src="{{ senha_url}}" width="20"  height="20"/>
-                  <a href="{% url 'editor_noticias' %}"  class="dropdown-item text-info" type="button">Publicar</a>
-                </li>
-                {% endif %}
-              
-                <li class="dropdown-item d-flex ">
-                  <img src="{{ logout_url}}" width="20" height="20"/>
-                  <form action="{% url 'logout' %}" method="post" >
-                    {% csrf_token %}
-                    <button type="submit" class=" dropdown-item text-info">Logout</button>
-                  </form>
-                </li>
-              </ul>
-          </div>
-        {% else %}
-          <a href="" class="px-3 ms-auto text-info text-decoration-none">Sign</a>
-          <a href="{% url 'login' %}" class="px-3 text-info text-decoration-none">Login</a>
-
-        {% endif %}    
-    </div>
-
-    <nav class="navbar navbar-expand-lg " style="background-color:#223140;" >
+<div class="">
+    <nav class="navbar navbar-expand-lg " style="background-color:#223140;">
         <div class="container-fluid">
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          
-            <form action="{% url 'home' %}" class="d-flex" role="search" method="POST" >
-              {% csrf_token %}
-              <select class="form-select" name="categoria" aria-label="Default select example">
-                <option {% if categoria == 0 %}selected{% endif %} value="0">Todas</option>
-                {% for cate in categorias %}
-                {% if categoria == cate.id %}
-                <option selected value="{{cate.id}}">{{cate.nome}}</option>
-                {% else %}
-                <option value="{{cate.id}}">{{cate.nome}}</option>
-                {% endif %}
-                {% endfor %}
-              </select>
-              <input class="form-control me-2" type="search" name="titulo" placeholder="Search" aria-label="Search" value="{{titulo}}">
-              <button class="btn btn-outline-info" type="submit">Search</button>
-            </form>
-          </div>
-        </div>
-    
-      </nav>
-      <div class="d-flex justify-content-end p-3 text-info">
-        Compartilhar
-        <a href="https://www.whatsapp.com/?lang=pt_BR" target="_blank" >
-          <img src="{% static 'icones/whatsapp.png' %}" alt="logo" width="50" class="px-3" style="color: aqua;">
-        </a>
-        <a href="https://www.instagram.com/" target="_blank" >
-          <img src="{% static 'icones/instagram.png' %}" alt="logo" width="50" class="px-3" style="color: aqua;">
-        </a>
-        <a href="https://web.facebook.com/?locale=pt_BR&_rdc=1&_rdr" target="_blank" >
-          <img src="{% static 'icones/facebook.png' %}" alt="logo" width="50" class="px-3" style="color: aqua;">
-        </a>
-      </div>
-</div>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
+                <form action="{% url 'home' %}" class="d-flex" role="search" method="POST">
+                    {% csrf_token %}
+                    <select class="form-select" name="categoria" aria-label="Default select example">
+                        {% if categoria == 0 %}
+                        <option selected value="0">Todas</option>
+                        {% else %}
+                        <option value="0">Todas</option>
+                        {% endif %}
+                        {% for cate in categorias %}
+                        {% if categoria == cate.id %}
+                        <option selected value="{{cate.id}}">{{cate.nome}}</option>
+                        {% else %}
+                        <option value="{{cate.id}}">{{cate.nome}}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                    <input class="form-control me-2" type="search" name="titulo" placeholder="Pesquisar Título"
+                        aria-label="Search" value="{{titulo}}">
+                    <button class="btn btn-outline-info" type="submit">Pesquisar</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
