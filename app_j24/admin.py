@@ -15,7 +15,17 @@ class NoticiaAdmin(admin.ModelAdmin):
     '''
     NoticiaAdmin
     '''
-    list_display = ['titulo', 'subtitulo', 'criado_em', 'conteudo', 'imagem', 'autor', 'categoria']
+    list_display = [
+        'titulo',
+        'subtitulo',
+        'criada_em',
+        'atualizada_em',
+        'publicada',
+        'publicada_em',
+        'imagem',
+        'autor',
+        'categoria'
+    ]
     #  list_filter = ['']
     search_fields = ['titulo']
 
