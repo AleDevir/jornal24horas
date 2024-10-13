@@ -22,15 +22,15 @@
                   <button class="dropdown-item text-info" type="button">Trocar senha</button>
                 </li>
               
-                {% if perms.app_j24.autor_noticia %}
+                {% if perms.app_j24.noticia_criar %}
                 <li class="dropdown-item d-flex "><img src="{{ senha_url}}" width="20"  height="20"/>
-                  <a href="{% url 'exibir_noticias' %}" class="dropdown-item text-info">Minhas noticias</a>
+                  <a href="{% url 'noticias_autor' %}" class="dropdown-item text-info">Minhas noticias</a>
                 </li>
                 {% endif %}
               
                 {% if perms.app_j24.pode_publicar %}
                 <li class="dropdown-item d-flex "><img src="{{ senha_url}}" width="20"  height="20"/>
-                  <button class="dropdown-item text-info" type="button">Publicar</button>
+                  <a href="{% url 'editor_noticias' %}"  class="dropdown-item text-info" type="button">Publicar</a>
                 </li>
                 {% endif %}
               
