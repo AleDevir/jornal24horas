@@ -4,15 +4,21 @@
 
 <div class="container">
     <div class="table-responsive mt-5">
-        {% include "search.html" %}
-        {% if perms.app_j24.noticia_criar %}
-        <a class="btn btn-outline-info" href="{% url 'cadastro-noticias' %}">Adicionar</a>
-        {% endif %}
+        <div class="d-flex justify-content-between" style="background-color:#223140;">
+            {% include "search.html" %}
+            <div class="align-middle">
+                {% if perms.app_j24.noticia_criar %}
+                <a class="btn btn-outline-info " href="{% url 'cadastro-noticias' %}">Adicionar</a>
+                {% endif %}
+            </div>
+
+        </div>
         <table class="table table-dark table-hover opacity-75">
             <thead class="text-info justify-content-center">
                 <tr>
-                    {% if perms.app_j24.pode_publicar %}
                     <th scope="col" class="text-info">Publicada</th>
+                    {% if perms.app_j24.pode_publicar %}
+                    <th scope="col" class="text-info">Autor</th>
                     {% endif %}
                     <th scope="col" class="text-info">Titulo</th>
                     <th scope="col" class="text-info">Categotia</th>
@@ -35,11 +41,25 @@
                         {% endif %}
                     </div>
                 </td>
+                <td>{{noticia.autor}}</td>
+                {% else %}
+                <td>
+                    <div class="form-check form-switch p-0 ">
+                        {% if noticia.publicada %}
+                        <img src="/static/icones/checked.png" width="22" height="22" />
+                        {% else %}
+                        <img src="/static/icones/cancel.png" width="22" height="22" />
+                        {% endif %}
+                    </div>
+                </td>
                 {% endif %}
                 <td>{{noticia.titulo}}</td>
                 <td>{{noticia.categoria}}</td>
                 <td>
                     <div class="d-flex justify-content-between">
+                        <a href="{% url 'noticia-detail' noticia.id %}">
+                            <img src="/static/icones/view.png" width="22" height="22" />
+                        </a>
                         {% if perms.app_j24.noticia_alterar %}
                         <a href="{% url 'atualizar-noticia' noticia.id %}">
                             <img src="/static/icones/edit.png" width="22" height="22" />
@@ -56,6 +76,23 @@
                 {% endfor %}
             </tbody>
         </table>
+    </div>
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; primeira</a>
+            <a href="?page={{ page_obj.previous_page_number }}">anterior</a>
+            {% endif %}
+
+            <span class="current">
+                Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">próxima</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">última &raquo;</a>
+            {% endif %}
+        </span>
     </div>
 </div>
 

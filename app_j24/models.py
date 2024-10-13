@@ -22,12 +22,12 @@ class Noticia(models.Model):
     '''
     Noticia
     '''
-    titulo = models.CharField('Título', max_length=300)
+    titulo = models.CharField('Título', max_length=100)
     subtitulo = models.CharField('Subtítulo', max_length=300)
     criada_em = models.DateTimeField('criado', help_text='dd/mm/yyyy hh:MM', auto_now_add=True)
     atualizada_em = models.DateTimeField('atualizada', help_text='dd/mm/yyyy hh:MM', auto_now_add=True)
     publicada_em = models.DateTimeField('publicada', help_text='dd/mm/yyyy hh:MM', null=True)
-    conteudo= models.TextField(default='', verbose_name='Conteudo')
+    conteudo= models.TextField('Conteúdo', max_length=3000, default='')
     imagem = models.ImageField(upload_to='', blank=True)
     autor = models.ForeignKey(User, on_delete=models.RESTRICT)
     categoria = models.ForeignKey(Categoria, on_delete=models.RESTRICT)

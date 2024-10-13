@@ -2,6 +2,7 @@
 Módulos views de cadastros
 '''
 from datetime import datetime
+from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.forms import BaseModelForm
@@ -16,7 +17,6 @@ from django.urls import reverse
 from django.views.generic import  DetailView, ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from .models import Categoria, Noticia
-from .forms import PesquisarNoticiaForm
 
 
 class NoticiaBase(PermissionRequiredMixin):
@@ -27,10 +27,8 @@ class NoticiaBase(PermissionRequiredMixin):
 
     def get_success_url(self):
         if self.request.user.has_perm('app_j24.noticia_criar'):
-            # return reverse('noticias_autor')
             return reverse('noticias')
         if self.request.user.has_perm('app_j24.pode_publicar'):
-            # return reverse('editor_noticias')
             return reverse('noticias')
         return reverse('home')
 
@@ -66,105 +64,6 @@ class NoticiaDelete(NoticiaBase, DeleteView):
     permission_required = "app_j24.noticia_excluir"
     template_name = 'noticia_confirm_delete.html'
 
-class NoticiasListView(ListView):
-    '''
-    Listar as nóticias dos autores e editores
-    '''
-    titulo = ''
-    categoria = 0     
-    model = Noticia
-    template_name = 'noticias_table.html'
-
-    def post(self, request, *args, **kwargs):
-        self.titulo = ''
-        self.categoria = 0   
-        if self.request.method == 'POST':
-            self.titulo = self.request.POST['titulo']
-            if self.request.POST['categoria']:
-                self.categoria = int(self.request.POST['categoria'])
-
-        return render(request, 'noticias_table.html', {
-            "titulo": self.titulo,
-            "categoria": self.categoria,
-            "categorias": Categoria.objects.all(),
-            "object_list": self.get_queryset(),
-        })
-
-    def get_queryset(self):
-        filtragem = {}
-        if self.titulo:
-            filtragem['titulo__icontains'] = self.titulo
-        if self.categoria != 0:
-            filtragem['categoria'] = self.categoria
-        if not self.request.user.has_perm('app_j24.pode_publicar'):
-            filtragem['autor'] = self.request.user
-        
-        if filtragem:
-            return Noticia.objects.filter(**filtragem)
-
-        return Noticia.objects.all()
-
-        # if self.titulo and self.categoria != 0:
-        #     print('111111111111111111111111')
-        #     return Noticia.objects.filter(titulo__icontains=self.titulo, categoria=self.categoria)
-        # if self.titulo:
-        #     print('2222222222222222222222222')
-        #     return Noticia.objects.filter(titulo__icontains=self.titulo)
-        # if self.categoria != 0:
-        #     print('3333333333333333333333333333333')
-        #     return Noticia.objects.filter(categoria=self.categoria)          
-        # print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
-        # return Noticia.objects.all()
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['categorias'] = Categoria.objects.all()     
-        return context
-
-
-class HomeListView(ListView):
-    '''
-    Listar as nóticias na página Home
-    '''
-    titulo = ''
-    categoria = 0     
-    model = Noticia
-    template_name = 'home.html'
-
-    def post(self, request, *args, **kwargs):
-        self.titulo = ''
-        self.categoria = 0   
-        if self.request.method == 'POST':
-            self.titulo = self.request.POST['titulo']
-            if self.request.POST['categoria']:
-                self.categoria = int(self.request.POST['categoria'])
-
-        return render(request, 'home.html', {
-            "titulo": self.titulo,
-            "categoria": self.categoria,
-            "categorias": Categoria.objects.all(),
-            "object_list": self.get_queryset(),
-        })
-
-    def get_queryset(self):
-        if self.titulo and self.categoria != 0:
-            return Noticia.objects.filter(publicada=True, titulo__icontains=self.titulo, categoria=self.categoria)
-
-        if self.titulo:
-            return Noticia.objects.filter(publicada=True, titulo__icontains=self.titulo)
-
-        if self.categoria != 0:
-            return Noticia.objects.filter(publicada=True, categoria=self.categoria)
-           
-        return Noticia.objects.filter(publicada=True).order_by('-publicada_em')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['categorias'] = Categoria.objects.all()     
-        return context
-
-
-
 class NoticiaDetailView(DetailView):
     '''
     Listar as nóticias na página Home
@@ -172,65 +71,82 @@ class NoticiaDetailView(DetailView):
     model = Noticia
     template_name = 'noticia.html'
 
-
-@login_required(login_url="/accounts/login/")
-@permission_required("app_j24.noticia_criar")
-def noticias_autor(request) -> HttpResponse:
+class NoticiasBaseListView(ListView):
     '''
-   Notícias de um determinado autor
+    Listar as nóticias dos autores e editores
     '''
-    # if request.method == "POST":
-    #     titulo = request.POST['titulo']
-    #     uma_noticia = Noticia.objects.filter(titulo__icontains=titulo).first()
-    #     if uma_noticia:
-    #         return HttpResponseRedirect(reverse("noticias/cadastro/", args=(uma_noticia.id,)))
-    #     raise Http404(f"Notícia de título {titulo} não encontrada!")
+    titulo = ''
+    categoria = 0
+    publicada = None
+    model = Noticia
 
-    lista = Noticia.objects.filter(autor=request.user)
-    form = PesquisarNoticiaForm()
-    return render(request, 'noticias_table.html', {
-        "form": form,
-        "noticias": lista,
-    })
+    def post(self, request, *args, **kwargs):
+        self.titulo = ''
+        self.categoria = 0   
+        if self.request.method == 'POST':
+            self.titulo = self.request.POST['titulo']
+            if self.request.POST['categoria']:
+                self.categoria = int(self.request.POST['categoria'])
 
-@login_required(login_url="/accounts/login/")
-@permission_required("app_j24.pode_publicar")
-def editor_noticias(request) -> HttpResponse:
+        if not self.paginate_by:
+            return render(request, self.template_name, {
+                "titulo": self.titulo,
+                "categoria": self.categoria,
+                "categorias": Categoria.objects.all(),
+                "object_list": self.get_queryset(),
+            })
+
+        # https://docs.djangoproject.com/en/5.1/topics/pagination/
+        noticias = self.get_queryset()
+        paginator = Paginator(noticias, self.paginate_by)
+        page_obj = paginator.get_page(1)
+
+        return render(request, self.template_name, {
+            "titulo": self.titulo,
+            "categoria": self.categoria,
+            "categorias": Categoria.objects.all(),
+            "object_list": noticias,
+            "page_obj": page_obj,
+        })
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categorias'] = Categoria.objects.all()
+        return context
+
+    def get_queryset(self):
+        filtragem = {}
+        if self.titulo:
+            filtragem['titulo__icontains'] = self.titulo
+        if self.categoria != 0:
+            filtragem['categoria'] = self.categoria
+        if self.publicada:
+            filtragem['publicada'] = self.publicada
+        elif self.request.user.has_perm('app_j24.noticia_criar'):
+            filtragem['autor'] = self.request.user
+
+        if filtragem and self.publicada:
+            return Noticia.objects.filter(**filtragem).order_by('-publicada_em')
+        elif filtragem:
+            return Noticia.objects.filter(**filtragem).order_by('titulo')
+        
+        return Noticia.objects.all().order_by('titulo')
+
+
+class NoticiasListView(NoticiasBaseListView):
     '''
-    Notícias  para o editor publicar ou não
+    Listar as nóticias dos autores e editores
     '''
-    lista = Noticia.objects.all()
-    form = PesquisarNoticiaForm()
-    return render(request, 'noticias_table.html', {
-        "form": form,
-        "noticias": lista,
-    })
+    template_name = 'noticias_table.html'
+    paginate_by = 5
 
 
-# def pesquisar_noticias(request) -> HttpResponse:
-#     '''
-#     Pesquisar Notícias
-#     '''
-#     titulo = request.POST['titulo']
-#     categoria = request.POST['categoria']
-#     print('______________________________________________')
-#     print(f"titulo=|{titulo}|")
-#     print(f"catergoria=|{categoria}| TIPO={type(categoria)}")
-#     print('______________________________________________')
-#     noticias = []
-#     if titulo and categoria != '0':
-#         noticias = Noticia.objects.filter(titulo__icontains=titulo, categoria=categoria)
-#     elif titulo:
-#         noticias = Noticia.objects.filter(titulo__icontains=titulo)
-#     elif categoria != '0':
-#         noticias = Noticia.objects.filter(categoria=categoria)
-#     else:
-#         noticias = Noticia.objects.all()
-#     return render(request, 'home.html', {
-#         "titulo": titulo,
-#         "categoria": categoria,
-#         "object_list": noticias,
-#     })
+class HomeListView(NoticiasBaseListView):
+    '''
+    Listar as nóticias na página Home
+    '''
+    publicada = True
+    template_name = 'home.html'
 
 
 @login_required(login_url="/accounts/login/")
