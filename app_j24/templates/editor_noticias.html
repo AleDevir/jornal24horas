@@ -4,7 +4,7 @@
 
 <div class="table-responsive mt-5">
     <table class="table table-dark table-hover opacity-75">
-        <thead class="text-info">
+        <thead class="text-info justify-content-center">
           <tr >
             <th scope="col" class="text-info">Publicada</th>
             <th scope="col" class="text-info">Titulo</th>
@@ -15,7 +15,7 @@
         <tbody>
             {% for noticia in editor_noticias%}
             <td>
-              <div class="form-check form-switch">
+              <div class="form-check form-switch p-0 ">
                   {% if noticia.publicada %}
                   <a href="{% url 'publicar_noticia' noticia_id=noticia.id publicado=0 %}" >
                     <img src="/static/icones/checked.png" width="22" height="22"/>

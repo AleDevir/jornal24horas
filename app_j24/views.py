@@ -15,7 +15,7 @@ from django.http import Http404
 from django.urls import reverse
 from django.views.generic import  DetailView, ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from .models import Noticia
+from .models import Categoria, Noticia
 from .forms import PesquisarNoticiaForm
 
 
@@ -69,10 +69,55 @@ class HomeListView(ListView):
     '''
     Listar as nóticias na página Home
     '''
+    titulo = ''
+    categoria = 0     
     model = Noticia
     template_name = 'home.html'
+
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.titulo = ''
+        self.categoria = 0   
+        if self.request.method == 'POST':
+            self.titulo = self.request.POST['titulo']
+            if self.request.POST['categoria']:
+                self.categoria = int(self.request.POST['categoria'])
+
+        print('______________________________________________')
+        print(f"titulo=|{self.titulo}|")
+        print(f"catergoria=|{self.categoria}| TIPO={type(self.categoria)}")
+        print('______________________________________________')
+
+        return render(request, 'home.html', {
+            "titulo": self.titulo,
+            "categoria": self.categoria,
+            "categorias": Categoria.objects.all(),
+            "object_list": self.get_queryset(),
+        })
+
     def get_queryset(self):
+        if self.titulo and self.categoria != 0:
+            return Noticia.objects.filter(publicada=True, titulo__icontains=self.titulo, categoria=self.categoria)
+
+        if self.titulo:
+            return Noticia.objects.filter(publicada=True, titulo__icontains=self.titulo)
+
+        if self.categoria != 0:
+            return Noticia.objects.filter(publicada=True, categoria=self.categoria)
+           
         return Noticia.objects.filter(publicada=True).order_by('-publicada_em')
+
+    def get_context_data(self, **kwargs):
+        print('kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk')
+        print(f"kwargs={kwargs}")
+        print('ccccccccccccccccccccccccccccccccccccccccccc')
+        context = super().get_context_data(**kwargs)
+        context['categorias'] = Categoria.objects.all()     
+        return context
+
+
 
 class NoticiaDetailView(DetailView):
     '''
@@ -115,17 +160,30 @@ def editor_noticias(request) -> HttpResponse:
     })
 
 
-def pesquisar_noticias(request) -> HttpResponse:
-    '''
-    Pesquisar Notícias
-    '''
-    titulo = request.POST['titulo']
-    noticias = Noticia.objects.filter(titulo__icontains=titulo)
-
-    lista = Noticia.objects.filter(autor=request.user)
-    return render(request, 'noticias_filtradas.html', {
-        "object_list": noticias,
-    })
+# def pesquisar_noticias(request) -> HttpResponse:
+#     '''
+#     Pesquisar Notícias
+#     '''
+#     titulo = request.POST['titulo']
+#     categoria = request.POST['categoria']
+#     print('______________________________________________')
+#     print(f"titulo=|{titulo}|")
+#     print(f"catergoria=|{categoria}| TIPO={type(categoria)}")
+#     print('______________________________________________')
+#     noticias = []
+#     if titulo and categoria != '0':
+#         noticias = Noticia.objects.filter(titulo__icontains=titulo, categoria=categoria)
+#     elif titulo:
+#         noticias = Noticia.objects.filter(titulo__icontains=titulo)
+#     elif categoria != '0':
+#         noticias = Noticia.objects.filter(categoria=categoria)
+#     else:
+#         noticias = Noticia.objects.all()
+#     return render(request, 'home.html', {
+#         "titulo": titulo,
+#         "categoria": categoria,
+#         "object_list": noticias,
+#     })
 
 
 @login_required(login_url="/accounts/login/")
