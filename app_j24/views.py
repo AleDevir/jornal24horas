@@ -145,6 +145,7 @@ class HomeListView(NoticiasBaseListView):
     '''
     Listar as nóticias na página Home
     '''
+    # paginate_by = 4
     publicada = True
     template_name = 'home.html'
 
