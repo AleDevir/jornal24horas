@@ -63,6 +63,7 @@ class NoticiaDelete(NoticiaBase, DeleteView):
     '''
     permission_required = "app_j24.noticia_excluir"
     template_name = 'noticia_confirm_delete.html'
+   
 
 class NoticiaDetailView(DetailView):
     '''
@@ -148,7 +149,7 @@ class HomeListView(NoticiasBaseListView):
     '''
     Listar as nóticias na página Home
     '''
-    paginate_by = 4
+    # paginate_by = 4
     publicada = True
     template_name = 'home.html'
 
