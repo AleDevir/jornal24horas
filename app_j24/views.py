@@ -63,6 +63,7 @@ class NoticiaDelete(NoticiaBase, DeleteView):
     '''
     permission_required = "app_j24.noticia_excluir"
     template_name = 'noticia_confirm_delete.html'
+   
 
 class NoticiaDetailView(DetailView):
     '''
@@ -87,8 +88,9 @@ class NoticiasBaseListView(ListView):
             self.titulo = self.request.POST['titulo']
             if self.request.POST['categoria']:
                 self.categoria = int(self.request.POST['categoria'])
-
+        print('if not self.paginate_by..........................')
         if not self.paginate_by:
+            print('>>>>>> if not self.paginate_by..........................')
             return render(request, self.template_name, {
                 "titulo": self.titulo,
                 "categoria": self.categoria,
@@ -96,8 +98,10 @@ class NoticiasBaseListView(ListView):
                 "object_list": self.get_queryset(),
             })
 
+        print('PAGINACAO..........................')
         # https://docs.djangoproject.com/en/5.1/topics/pagination/
         noticias = self.get_queryset()
+        print(f"self.paginate_by={self.paginate_by}")
         paginator = Paginator(noticias, self.paginate_by)
         page_obj = paginator.get_page(1)
 
@@ -105,7 +109,7 @@ class NoticiasBaseListView(ListView):
             "titulo": self.titulo,
             "categoria": self.categoria,
             "categorias": Categoria.objects.all(),
-            "object_list": noticias,
+            "object_list": noticias[0:self.paginate_by],
             "page_obj": page_obj,
         })
 
@@ -145,6 +149,7 @@ class HomeListView(NoticiasBaseListView):
     '''
     Listar as nóticias na página Home
     '''
+    # paginate_by = 4
     publicada = True
     template_name = 'home.html'
 

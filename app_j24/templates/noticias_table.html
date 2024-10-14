@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="container">
-    <div class="table-responsive mt-5">
+    <div class="table-responsive-sm mt-5">
         <div class="d-flex justify-content-between" style="background-color:#223140;">
             {% include "search.html" %}
             <div class="align-middle">
@@ -22,7 +22,7 @@
                     {% endif %}
                     <th scope="col" class="text-info">Titulo</th>
                     <th scope="col" class="text-info">Categotia</th>
-                    <th scope="col" class="text-info">Ações</th>
+                    <th scope="col" class="text-info" style="width: 8%;">Ações</th>
                 </tr>
             </thead>
             <tbody>
@@ -56,19 +56,20 @@
                 <td>{{noticia.titulo}}</td>
                 <td>{{noticia.categoria}}</td>
                 <td>
-                    <div class="d-flex justify-content-between">
+                    <div class="d-flex justify-content-between" style="max-width: 80px;">
                         <a href="{% url 'noticia-detail' noticia.id %}">
                             <img src="/static/icones/view.png" width="22" height="22" />
                         </a>
                         {% if perms.app_j24.noticia_alterar %}
                         <a href="{% url 'atualizar-noticia' noticia.id %}">
-                            <img src="/static/icones/edit.png" width="22" height="22" />
+                            <img src="/static/icones/edit.png" width="22" height="22" class="m-1" />
                         </a>
                         {% endif %}
                         {% if perms.app_j24.noticia_excluir %}
                         <a href="{% url 'excluir-noticia' noticia.id %}">
                             <img src="/static/icones/excluir.png" width="22" height="22" />
                         </a>
+
                         {% endif %}
                     </div>
                 </td>
@@ -77,23 +78,7 @@
             </tbody>
         </table>
     </div>
-    <div class="pagination">
-        <span class="step-links">
-            {% if page_obj.has_previous %}
-            <a href="?page=1">&laquo; primeira</a>
-            <a href="?page={{ page_obj.previous_page_number }}">anterior</a>
-            {% endif %}
-
-            <span class="current">
-                Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
-            </span>
-
-            {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">próxima</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">última &raquo;</a>
-            {% endif %}
-        </span>
-    </div>
+    {% include "paginacao.html" %}
 </div>
 
 {% endblock %}

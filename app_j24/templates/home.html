@@ -5,19 +5,20 @@
 
 {% include "search.html" %}
 <div class="container">
-<div class="row mt-3 ">
-    {% for uma_noticia in object_list %}
-    <div class="col-xl-2 col-lg-3 col-sm-4 col p-2">
-        <a href="{% url 'noticia-detail' uma_noticia.id %}" class="text-decoration-none">
-            <div class="  ratio ratio-16x9 " style="object-fit: contain;">
-                <img src="/media/{{uma_noticia.imagem}}"  width="200"  class="rounded" alt="{{uma_noticia.titulo}}" > 
-            </div>     
+    <div class="row mt-3 ">
+        {% for uma_noticia in object_list %}
+        <div class="col-xl-2 col-lg-3 col-sm-4 col p-2">
+            <a href="{% url 'noticia-detail' uma_noticia.id %}" class="text-decoration-none">
+                <div class="  ratio ratio-16x9 " style="object-fit: contain;">
+                    <img src="/media/{{uma_noticia.imagem}}" width="200" class="rounded" alt="{{uma_noticia.titulo}}">
+                </div>
 
-            <p class="text-info">{{uma_noticia.titulo}}</p>        
-            <p class="text-capitalize text-justify text-secondary">Em {{uma_noticia.categoria}}</p>    
-        </a>
+                <p class="text-info">{{uma_noticia.titulo}}</p>
+                <p class="text-capitalize text-justify text-secondary">Em {{uma_noticia.categoria}}</p>
+            </a>
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-</div> 
+    {% include "paginacao.html" %}
 </div>
 {% endblock %}
