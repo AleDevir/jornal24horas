@@ -1,19 +1,20 @@
 {% load static %}
 {% load django_bootstrap5 %}
-
+{% static 'icones/procurar.png' as procurar_url %}
 <div>
-    <nav class="navbar navbar-expand-lg " style="background-color:#223140;">
-        <div class="container-fluid">
+    <nav class="navbar navbar-expand-lg" style="background-color:#223140;">
+        <div class="container-fluid  ">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse " id="navbarSupportedContent">
+            <div class="collapse navbar-collapse px-2 " id="navbarSupportedContent">
 
                 <form class="d-flex " role="search" method="POST">
                     {% csrf_token %}
-                    <select class="form-select" name="categoria" aria-label="Default select example">
+                    <select class="form-select" style="margin-right: 5px;" name="categoria"
+                        aria-label="Default select example">
                         {% if categoria == 0 %}
                         <option selected value="0">Todas</option>
                         {% else %}
@@ -27,9 +28,10 @@
                         {% endif %}
                         {% endfor %}
                     </select>
-                    <input class="form-control me-2" type="search" name="titulo" placeholder="Pesquisar Título"
+                    <input class="form-control me-2 " type="search" name="titulo" placeholder="Pesquisar Título"
                         aria-label="Search" value="{{titulo}}">
-                    <button class="btn btn-outline-info" type="submit">Pesquisar</button>
+                    <button class="btn btn-outline-info btn-sm" type="submit"><img src="{{ procurar_url}}" width="22"
+                            height="22"></button>
 
                 </form>
             </div>
