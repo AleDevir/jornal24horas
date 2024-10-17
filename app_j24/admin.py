@@ -3,8 +3,6 @@ ADMIN: Registrar modelos da aplicação na área administrativa.
 '''
 
 from django.contrib import admin
-
-
 from .models import (
 
     Categoria,
@@ -26,8 +24,13 @@ class NoticiaAdmin(admin.ModelAdmin):
         'autor',
         'categoria'
     ]
-    #  list_filter = ['']
-    search_fields = ['titulo']
+    list_filter = ['publicada', 'categoria']
+    search_fields = ['titulo', 'categoria__nome']
+
+def save_model(self, request, obj, form, change):
+        if not obj.pk:
+            obj.autor = request.user
+        super().save_model(request, obj, form, change)
 
 
 admin.site.register(Noticia, NoticiaAdmin)

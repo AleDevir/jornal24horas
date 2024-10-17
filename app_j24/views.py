@@ -3,6 +3,9 @@ Módulos views de cadastros
 '''
 from datetime import datetime
 from django.core.paginator import Paginator
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.forms import BaseModelForm
@@ -17,6 +20,7 @@ from django.urls import reverse
 from django.views.generic import  DetailView, ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from .models import Categoria, Noticia
+from .forms import RegistrationForm, ChangePasswordForm
 
 
 class NoticiaBase(PermissionRequiredMixin):
@@ -62,8 +66,7 @@ class NoticiaDelete(NoticiaBase, DeleteView):
     Excluir Notícia
     '''
     permission_required = "app_j24.noticia_excluir"
-    template_name = 'noticia_confirm_delete.html'
-   
+    template_name = 'noticia_confirm_delete.html'  
 
 class NoticiaDetailView(DetailView):
     '''
@@ -136,14 +139,12 @@ class NoticiasBaseListView(ListView):
         
         return Noticia.objects.all().order_by('titulo')
 
-
 class NoticiasListView(NoticiasBaseListView):
     '''
     Listar as nóticias dos autores e editores
     '''
     template_name = 'noticias_table.html'
     paginate_by = 5
-
 
 class HomeListView(NoticiasBaseListView):
     '''
@@ -152,7 +153,6 @@ class HomeListView(NoticiasBaseListView):
     # paginate_by = 4
     publicada = True
     template_name = 'home.html'
-
 
 @login_required(login_url="/accounts/login/")
 @permission_required("app_j24.pode_publicar")
@@ -174,3 +174,32 @@ def publicar_noticia(request, noticia_id: int, publicado: int) -> HttpResponse:
             f"Notícia não encontrada! Não foi possível publicar a Notícia de ID={noticia_id} porque ela não existe na base de dados."
         ) from not_found
     return HttpResponseRedirect(reverse("noticias"))
+
+class SignUpView(CreateView):
+    
+    model = User
+    template_name = 'register.html'
+    form_class = RegistrationForm
+
+    def get_success_url(self):
+        return reverse('login')
+
+class UserUpdate(UpdateView):
+    '''
+    Atualiza a Usuário
+    '''
+    model = User
+    fields = ['username', 'email']
+    template_name = 'user_edit.html'
+    def get_success_url(self):
+        return reverse('home')
+
+
+class ChangePasswordView(PasswordChangeView):
+    form_class = PasswordChangeForm
+    template_name = 'password_edit.html'
+    def get_success_url(self):
+        return reverse('home')
+
+
+
