@@ -3,21 +3,23 @@
 {% load static %}
 {% block content %}
 
-{% include "search.html" %}
-<div class="container">
-    <div class="row mt-3 ">
-        {% for uma_noticia in object_list %}
-        <div class="col-xl-2 col-lg-3 col-sm-4 col p-2">
-            <a href="{% url 'noticia-detail' uma_noticia.id %}" class="text-decoration-none">
-                <div class="  ratio ratio-16x9 " style="object-fit: contain;">
-                    <img src="/media/{{uma_noticia.imagem}}" width="200" class="rounded" alt="{{uma_noticia.titulo}}">
-                </div>
+<div class="position-fixed w-100" style="z-index: 10;">
+    {% include "search.html" %}
+</div>
+<div style="height: 60px;"></div>
+<div class="d-none d-md-block ">
+    {% include "noticia_carrossel.html" %}
+</div>
 
-                <p class="text-info">{{uma_noticia.titulo}}</p>
-                <p class="text-capitalize text-justify text-secondary">Em {{uma_noticia.categoria}}</p>
-            </a>
+<div style="margin-top: 50px; padding: 0; margin-left: 35px;">
+    <div class="row">
+        <div class="col-8">
+            {% include "noticia_card.html" %}
         </div>
-        {% endfor %}
+        <div class="col-4 ">
+
+        </div>
+
     </div>
     {% include "paginacao.html" %}
 </div>
