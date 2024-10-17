@@ -3,12 +3,24 @@
 {% load static %}
 {% block content %}
 
-{% include "search.html" %}
-{% include "noticia_carrossel.html" %}
-<div class="container" style="margin-top: 160px;">
+<div class="position-fixed w-100" style="z-index: 10;">
+    {% include "search.html" %}
+</div>
+<div style="height: 60px;"></div>
+<div class="d-none d-md-block ">
+    {% include "noticia_carrossel.html" %}
+</div>
 
-    {% include "noticia_card.html" %}
+<div style="margin-top: 50px; padding: 0; margin-left: 35px;">
+    <div class="row">
+        <div class="col-8">
+            {% include "noticia_card.html" %}
+        </div>
+        <div class="col-4 ">
 
+        </div>
+
+    </div>
     {% include "paginacao.html" %}
 </div>
 {% endblock %}
