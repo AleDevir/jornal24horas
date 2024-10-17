@@ -1,7 +1,7 @@
 '''
 MODELS app_j24
 '''
-
+from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -26,12 +26,19 @@ class Noticia(models.Model):
     subtitulo = models.CharField('Subtítulo', max_length=300)
     criada_em = models.DateTimeField('criado', help_text='dd/mm/yyyy hh:MM', auto_now_add=True)
     atualizada_em = models.DateTimeField('atualizada', help_text='dd/mm/yyyy hh:MM', auto_now_add=True)
-    publicada_em = models.DateTimeField('publicada', help_text='dd/mm/yyyy hh:MM', null=True)
+    publicada_em = models.DateTimeField('Publicada em', help_text='dd/mm/yyyy hh:MM', null=True, editable=False)
     conteudo= models.TextField('Conteúdo', max_length=3000, default='')
     imagem = models.ImageField(upload_to='', blank=True)
-    autor = models.ForeignKey(User, on_delete=models.RESTRICT)
+    autor = models.ForeignKey(User, on_delete=models.RESTRICT, editable=False)
     categoria = models.ForeignKey(Categoria, on_delete=models.RESTRICT)
     publicada = models.BooleanField('publicada', default=False )
+ 
+    def save(self, *args, **kwargs):
+        if self.publicada and not self.publicada_em:
+            self.publicada_em = datetime.now()
+        elif not self.publicada and self.publicada_em:
+            self.publicada_em = None
+        return super().save(*args, **kwargs)
 
     class Meta:
         '''
@@ -49,4 +56,6 @@ class Noticia(models.Model):
         '''
         str
         '''
-        return f"Publicada em: {self.atualizada_em}  Titulo: {' '} {str(self.titulo)} Subitulo: {' '} {str(self.titulo)} {str(self.subtitulo)} Categoria: {' '} {str(self.categoria).capitalize()} Autor: {' '} {str(self.autor).capitalize()}"
+        if self.publicada:
+            return  f"Título: {str(self.titulo)} - PUBLICADA"
+        return f"Título: {str(self.titulo)}"
