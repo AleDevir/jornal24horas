@@ -4,6 +4,7 @@ URLs Aplicação
 from django.urls import path
 from . import views
 from .views import (
+    ChangePasswordView,
     HomeListView,
     NoticiasListView,
     NoticiaCreate,
@@ -25,7 +26,8 @@ urlpatterns = [
     path('noticias/cadastro/<int:pk>', NoticiaUpdate.as_view(), name='atualizar-noticia'),
     path('noticias/excluir/<int:pk>', NoticiaDelete.as_view(), name='excluir-noticia'),
     path("register/", SignUpView.as_view(), name='registrar-usuario'),
-    path('register/<int:pk>', UserUpdate.as_view(), name='atualizar-usuario'),
+    path('register/edit/user/<int:pk>', UserUpdate.as_view(), name='atualizar-usuario'),
+    path('register/edit/password/<int:pk>', ChangePasswordView.as_view(), name='atualizar-senha'),
    
 
 ]

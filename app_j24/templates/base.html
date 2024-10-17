@@ -37,7 +37,8 @@
                             dados</a>
                     </li>
                     <li class="dropdown-item d-flex "><img src="{{ senha_url}}" width="20" height="20" class="mt-1" />
-                        <button class="dropdown-item text-info" type="button">Trocar senha</button>
+                        <a href="{% url 'atualizar-senha' user.id %}" class="dropdown-item text-info"
+                            type="button">Trocar senha</a>
                     </li>
 
                     {% if perms.app_j24.noticia_criar %}

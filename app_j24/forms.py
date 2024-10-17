@@ -20,3 +20,8 @@ class RegistrationForm(UserCreationForm):
         '''
         model = User
         fields = ['username', 'email', 'password1', 'password2']
+
+class ChangePasswordForm(forms.Form):
+    antiga_senha = forms.CharField(widget=forms.PasswordInput())
+    nova_senha = forms.CharField(widget=forms.PasswordInput())
+    confirmar_senha = forms.CharField(widget=forms.PasswordInput())

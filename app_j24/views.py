@@ -4,13 +4,13 @@ Módulos views de cadastros
 from datetime import datetime
 from django.core.paginator import Paginator
 from django.contrib.auth.models import User
-from django.contrib.auth import login
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.forms import BaseModelForm
 from django.shortcuts import (
     render,
-    redirect,
     HttpResponse,
     HttpResponseRedirect,
 )
@@ -20,7 +20,7 @@ from django.urls import reverse
 from django.views.generic import  DetailView, ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from .models import Categoria, Noticia
-from .forms import RegistrationForm
+from .forms import RegistrationForm, ChangePasswordForm
 
 
 class NoticiaBase(PermissionRequiredMixin):
@@ -184,13 +184,22 @@ class SignUpView(CreateView):
     def get_success_url(self):
         return reverse('login')
 
-class UserUpdate(SignUpView, UpdateView):
+class UserUpdate(UpdateView):
     '''
     Atualiza a Usuário
     '''
-    def form_valid(self, form: BaseModelForm) -> HttpResponse:
-        return super().form_valid(form)
+    model = User
+    fields = ['username', 'email']
+    template_name = 'user_edit.html'
+    def get_success_url(self):
+        return reverse('home')
 
+
+class ChangePasswordView(PasswordChangeView):
+    form_class = PasswordChangeForm
+    template_name = 'password_edit.html'
+    def get_success_url(self):
+        return reverse('home')
 
 
 
