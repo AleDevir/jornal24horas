@@ -184,7 +184,7 @@ class SignUpView(CreateView):
     def get_success_url(self):
         return reverse('login')
 
-class UserUpdate(UpdateView):
+class UserUpdateView(UpdateView):
     '''
     Atualiza a Usuário
     '''
