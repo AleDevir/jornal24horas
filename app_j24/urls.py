@@ -11,6 +11,7 @@ from .views import (
     NoticiaUpdate,
     NoticiaDetailView,
     SignUpView,
+    UserUpdate,
 )
 
 APP_NAME = "app_j24"
@@ -24,5 +25,7 @@ urlpatterns = [
     path('noticias/cadastro/<int:pk>', NoticiaUpdate.as_view(), name='atualizar-noticia'),
     path('noticias/excluir/<int:pk>', NoticiaDelete.as_view(), name='excluir-noticia'),
     path("register/", SignUpView.as_view(), name='registrar-usuario'),
+    path('register/<int:pk>', UserUpdate.as_view(), name='atualizar-usuario'),
+   
 
 ]

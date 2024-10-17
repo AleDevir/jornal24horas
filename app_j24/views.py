@@ -175,7 +175,6 @@ def publicar_noticia(request, noticia_id: int, publicado: int) -> HttpResponse:
         ) from not_found
     return HttpResponseRedirect(reverse("noticias"))
 
-
 class SignUpView(CreateView):
     
     model = User
@@ -184,6 +183,13 @@ class SignUpView(CreateView):
 
     def get_success_url(self):
         return reverse('login')
+
+class UserUpdate(SignUpView, UpdateView):
+    '''
+    Atualiza a Usuário
+    '''
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        return super().form_valid(form)
 
 
 
