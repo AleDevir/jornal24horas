@@ -47,9 +47,6 @@ class Noticia(models.Model):
         db_table = 'noticias'
         permissions = [
             ("pode_publicar", "Permissão atribuida à Editores para a publicação da Notícia"),
-            ("noticia_criar", "Permissão para criar Notícias."),
-            ("noticia_alterar", "Permissão para alterar Notícias."),
-            ("noticia_excluir", "Permissão para excluir Notícias."),
         ]
 
     def __str__(self):

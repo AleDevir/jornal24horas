@@ -30,7 +30,7 @@ class NoticiaBase(PermissionRequiredMixin):
     model = Noticia
 
     def get_success_url(self):
-        if self.request.user.has_perm('app_j24.noticia_criar'):
+        if self.request.user.has_perm('app_j24.add_noticia'):
             return reverse('noticias')
         if self.request.user.has_perm('app_j24.pode_publicar'):
             return reverse('noticias')
@@ -47,7 +47,7 @@ class NoticiaCreate(NoticiaCadastro, CreateView):
     '''
     Notícia Criar
     '''
-    permission_required = "app_j24.noticia_criar"
+    permission_required = "app_j24.add_noticia"
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         form.instance.autor = self.request.user
         return super().form_valid(form)
@@ -56,7 +56,7 @@ class NoticiaUpdate(NoticiaCadastro, UpdateView):
     '''
     Atualiza a Notícia
     '''
-    permission_required = "app_j24.noticia_alterar"
+    permission_required = "app_j24.change_noticia"
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         form.instance.atualizada_em = datetime.now()
         return super().form_valid(form)
@@ -65,7 +65,7 @@ class NoticiaDelete(NoticiaBase, DeleteView):
     '''
     Excluir Notícia
     '''
-    permission_required = "app_j24.noticia_excluir"
+    permission_required = "app_j24.delete_noticia"
     template_name = 'noticia_confirm_delete.html'  
 
 class NoticiaDetailView(DetailView):
@@ -129,7 +129,7 @@ class NoticiasBaseListView(ListView):
             filtragem['categoria'] = self.categoria
         if self.publicada:
             filtragem['publicada'] = self.publicada
-        elif self.request.user.has_perm('app_j24.noticia_criar'):
+        elif self.request.user.has_perm('app_j24.add_noticia'):
             filtragem['autor'] = self.request.user
 
         if filtragem and self.publicada:

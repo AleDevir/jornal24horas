@@ -15,7 +15,7 @@
         <div class="d-flex justify-content-between" style="background-color:#223140;">
             {% include "search.html" %}
             <div class="p-2">
-                {% if perms.app_j24.noticia_criar %}
+                {% if perms.app_j24.add_noticia %}
                 <a class="btn btn-outline-info " href="{% url 'cadastro-noticias' %}">Adicionar</a>
                 {% endif %}
             </div>
@@ -66,12 +66,12 @@
                         <a href="{% url 'noticia-detail' noticia.id %}">
                             <img src="/static/icones/view.png" width="22" height="22" />
                         </a>
-                        {% if perms.app_j24.noticia_alterar %}
+                        {% if perms.app_j24.change_noticia %}
                         <a href="{% url 'atualizar-noticia' noticia.id %}">
                             <img src="/static/icones/edit.png" width="22" height="22" class="m-1" />
                         </a>
                         {% endif %}
-                        {% if perms.app_j24.noticia_excluir %}
+                        {% if perms.app_j24.delete_noticia %}
                         <a href="{% url 'excluir-noticia' noticia.id %}">
                             <img src="/static/icones/excluir.png" width="22" height="22" />
                         </a>
