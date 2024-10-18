@@ -30,7 +30,7 @@ class Noticia(models.Model):
     conteudo= models.TextField('Conteúdo', max_length=3000, default='')
     imagem = models.ImageField(upload_to='', blank=True)
     autor = models.ForeignKey(User, on_delete=models.RESTRICT, editable=False)
-    categoria = models.ForeignKey(Categoria, on_delete=models.RESTRICT)
+    categoria = models.ManyToManyField(Categoria)
     publicada = models.BooleanField('publicada', default=False )
  
     def save(self, *args, **kwargs):
@@ -47,9 +47,6 @@ class Noticia(models.Model):
         db_table = 'noticias'
         permissions = [
             ("pode_publicar", "Permissão atribuida à Editores para a publicação da Notícia"),
-            ("noticia_criar", "Permissão para criar Notícias."),
-            ("noticia_alterar", "Permissão para alterar Notícias."),
-            ("noticia_excluir", "Permissão para excluir Notícias."),
         ]
 
     def __str__(self):

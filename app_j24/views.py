@@ -8,7 +8,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.forms import BaseModelForm
+from django.forms import BaseModelForm, ValidationError
 from django.shortcuts import (
     render,
     HttpResponse,
@@ -20,7 +20,7 @@ from django.urls import reverse
 from django.views.generic import  DetailView, ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from .models import Categoria, Noticia
-from .forms import RegistrationForm, ChangePasswordForm
+from .forms import RegistrationForm
 
 
 class NoticiaBase(PermissionRequiredMixin):
@@ -30,7 +30,7 @@ class NoticiaBase(PermissionRequiredMixin):
     model = Noticia
 
     def get_success_url(self):
-        if self.request.user.has_perm('app_j24.noticia_criar'):
+        if self.request.user.has_perm('app_j24.add_noticia'):
             return reverse('noticias')
         if self.request.user.has_perm('app_j24.pode_publicar'):
             return reverse('noticias')
@@ -47,8 +47,10 @@ class NoticiaCreate(NoticiaCadastro, CreateView):
     '''
     Notícia Criar
     '''
-    permission_required = "app_j24.noticia_criar"
+    permission_required = "app_j24.add_noticia"
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        if not self.request.user.has_perm('app_j24.add_noticia'):
+            raise ValidationError('Permissão para adicionar notícia negada! Você não possui permissão necessária.')
         form.instance.autor = self.request.user
         return super().form_valid(form)
 
@@ -56,8 +58,15 @@ class NoticiaUpdate(NoticiaCadastro, UpdateView):
     '''
     Atualiza a Notícia
     '''
-    permission_required = "app_j24.noticia_alterar"
+    permission_required = "app_j24.change_noticia"
+
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        
+        eh_editor = self.request.user.has_perm('app_j24.pode_publicar')
+        if self.object.publicada and not eh_editor:
+            raise ValidationError('Permissão para alterar a notícia negada! Você não possui permissão necessária.')
+        if not eh_editor and self.object.autor != self.request.user:
+            raise ValidationError('Permissão para alterar a notícia negada! Você não é o autor da notícia.')
         form.instance.atualizada_em = datetime.now()
         return super().form_valid(form)
 
@@ -65,8 +74,16 @@ class NoticiaDelete(NoticiaBase, DeleteView):
     '''
     Excluir Notícia
     '''
-    permission_required = "app_j24.noticia_excluir"
+    permission_required = "app_j24.delete_noticia"
     template_name = 'noticia_confirm_delete.html'  
+
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        eh_editor = self.request.user.has_perm('app_j24.pode_publicar')
+        if self.object.publicada and not eh_editor:
+            raise ValidationError('Permissão para excluir a notícia negada! Você não possui permissão necessária.')
+        if not eh_editor and self.object.autor != self.request.user:
+            raise ValidationError('Permissão para excluir a notícia negada! Você não é o autor da notícia.')
+        return super().form_valid(form)
 
 class NoticiaDetailView(DetailView):
     '''
@@ -129,7 +146,7 @@ class NoticiasBaseListView(ListView):
             filtragem['categoria'] = self.categoria
         if self.publicada:
             filtragem['publicada'] = self.publicada
-        elif self.request.user.has_perm('app_j24.noticia_criar'):
+        elif self.request.user.has_perm('app_j24.add_noticia'):
             filtragem['autor'] = self.request.user
 
         if filtragem and self.publicada:

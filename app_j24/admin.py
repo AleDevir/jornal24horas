@@ -22,12 +22,12 @@ class NoticiaAdmin(admin.ModelAdmin):
         'publicada_em',
         'imagem',
         'autor',
-        'categoria'
+        
     ]
     list_filter = ['publicada', 'categoria']
-    search_fields = ['titulo', 'categoria__nome']
+    search_fields = ['titulo', 'categoria']
 
-def save_model(self, request, obj, form, change):
+    def save_model(self, request, obj, form, change):
         if not obj.pk:
             obj.autor = request.user
         super().save_model(request, obj, form, change)
