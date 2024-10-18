@@ -29,7 +29,6 @@
                     <th scope="col" class="text-info">Autor</th>
                     {% endif %}
                     <th scope="col" class="text-info">Titulo</th>
-                    <th scope="col" class="text-info">Categotia</th>
                     <th scope="col" class="text-info" style="width: 8%;">Ações</th>
                 </tr>
             </thead>
@@ -62,7 +61,6 @@
                 </td>
                 {% endif %}
                 <td>{{noticia.titulo}}</td>
-                <td>{{noticia.categoria}}</td>
                 <td>
                     <div class="d-flex justify-content-between" style="max-width: 80px;">
                         <a href="{% url 'noticia-detail' noticia.id %}">
