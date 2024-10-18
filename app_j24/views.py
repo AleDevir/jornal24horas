@@ -62,7 +62,7 @@ class NoticiaUpdate(NoticiaCadastro, UpdateView):
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         
-        eh_editor = self.request.user.has_perm('app_j24.pode_publicar')
+        eh_editor: bool = self.request.user.has_perm('app_j24.pode_publicar')
         if self.object.publicada and not eh_editor:
             raise ValidationError('Permissão para alterar a notícia negada! Você não possui permissão necessária.')
         if not eh_editor and self.object.autor != self.request.user:
@@ -161,7 +161,7 @@ class NoticiasListView(NoticiasBaseListView):
     Listar as nóticias dos autores e editores
     '''
     template_name = 'noticias_table.html'
-    paginate_by = 5
+    paginate_by = 2
 
 class HomeListView(NoticiasBaseListView):
     '''

@@ -63,20 +63,26 @@
                 <td>{{noticia.titulo}}</td>
                 <td>
                     <div class="d-flex justify-content-between" style="max-width: 80px;">
-                        <a href="{% url 'noticia-detail' noticia.id %}">
-                            <img src="/static/icones/view.png" width="22" height="22" />
-                        </a>
-                        {% if perms.app_j24.change_noticia %}
+                        {% if noticia.publicada and not perms.app_j24.pode_publicar %}
+                        <span></span>
+                        {% else %}
+
                         <a href="{% url 'atualizar-noticia' noticia.id %}">
-                            <img src="/static/icones/edit.png" width="22" height="22" class="m-1" />
+                            <img src="/static/icones/edit.png" width="22" height="22" class="m-1 opacity-50" />
                         </a>
                         {% endif %}
-                        {% if perms.app_j24.delete_noticia %}
+
+                        {% if noticia.publicada and not perms.app_j24.pode_publicar %}
+                        <span></span>
+                        {% else %}
                         <a href="{% url 'excluir-noticia' noticia.id %}">
                             <img src="/static/icones/excluir.png" width="22" height="22" />
                         </a>
 
                         {% endif %}
+                        <a href="{% url 'noticia-detail' noticia.id %}">
+                            <img src="/static/icones/view.png" width="22" height="22" />
+                        </a>
                     </div>
                 </td>
                 </tr>
