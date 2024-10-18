@@ -22,10 +22,10 @@ class NoticiaAdmin(admin.ModelAdmin):
         'publicada_em',
         'imagem',
         'autor',
-        'categoria'
+        
     ]
-    list_filter = ['publicada', 'categoria']
-    search_fields = ['titulo', 'categoria__nome']
+    list_filter = ['publicada']
+    search_fields = ['titulo']
 
 def save_model(self, request, obj, form, change):
         if not obj.pk:

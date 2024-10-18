@@ -30,7 +30,7 @@ class Noticia(models.Model):
     conteudo= models.TextField('Conteúdo', max_length=3000, default='')
     imagem = models.ImageField(upload_to='', blank=True)
     autor = models.ForeignKey(User, on_delete=models.RESTRICT, editable=False)
-    categoria = models.ForeignKey(Categoria, on_delete=models.RESTRICT)
+    categoria = models.ManyToManyField(Categoria)
     publicada = models.BooleanField('publicada', default=False )
  
     def save(self, *args, **kwargs):
