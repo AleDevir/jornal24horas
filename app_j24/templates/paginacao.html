@@ -1,37 +1,33 @@
-<div class="pagination ">
-    <span class="step-links ">
-        <div class="d-flex justify-content-between">
-            {% if page_obj.has_previous %}
-            {% if page_obj.previous_page_number == 1 %}
-            <a class="page-link text-info rounded m-1 " href="?page={{ page_obj.previous_page_number }}">&laquo;
-                anterior</a>
-            {% else %}
-            <a class="page-link text-info rounded m-1 " href="?page=1">&laquo;&laquo; primeira</a>
-            <a class="page-link text-info rounded m-1 " href="?page={{ page_obj.previous_page_number }}">&laquo;
-                anterior</a>
-            {% endif %}
-            {% endif %}
-
-
-            {% if page_obj %}
-            <span class="current text-info rounded  text-cente mt-2 m-1">
-                Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
-            </span>
-            {% endif %}
-
-            {% if page_obj.has_next %}
-            {% if page_obj.next_page_number == page_obj.paginator.num_pages %}
-            <a class="page-link text-info rounded m-1 " href="?page={{ page_obj.next_page_number }}">próxima &raquo;</a>
-            {% else %}
-            <a class="page-link text-info rounded m-1 " href="?page={{ page_obj.next_page_number }}">próxima &raquo;</a>
-            <a class="page-link text-info rounded m-1" href="?page={{ page_obj.paginator.num_pages }}">última
-                &raquo;&raquo;</a>
-            {% endif %}
-            {% endif %}
-
-        </div>
-
-    </span>
-
+<div class="pagination d-flex justify-content-between">
+    <div class="d-flex justify-content-between">
+        {% if page_obj.has_previous %}
+        {% if page_obj.previous_page_number == 1 %}
+        <a class="page-link text-info rounded m-1 " href="?page={{ page_obj.previous_page_number }}">&laquo;
+        </a>
+        {% else %}
+        <a class="page-link text-info rounded m-1 " href="?page=1">&laquo;&laquo;</a>
+        <a class="page-link text-info rounded m-1 " href="?page={{ page_obj.previous_page_number }}">&laquo;
+        </a>
+        {% endif %}
+        {% endif %}
+    </div>
+    <div class="mt-3">
+        {% if page_obj %}
+        <span class="current text-info  ">
+            Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+        </span>
+        {% endif %}
+    </div>
+    <div class="d-flex justify-content-between">
+        {% if page_obj.has_next %}
+        {% if page_obj.next_page_number == page_obj.paginator.num_pages %}
+        <a class="page-link text-info rounded m-1 " href="?page={{ page_obj.next_page_number }}"> &raquo;</a>
+        {% else %}
+        <a class="page-link text-info rounded m-1 " href="?page={{ page_obj.next_page_number }}"> &raquo;</a>
+        <a class="page-link text-info rounded m-1" href="?page={{ page_obj.paginator.num_pages }}">
+            &raquo;&raquo;</a>
+        {% endif %}
+        {% endif %}
+    </div>
 
 </div>
