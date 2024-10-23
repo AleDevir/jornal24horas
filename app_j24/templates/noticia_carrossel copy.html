@@ -9,90 +9,51 @@
 {% static 'img/politica.jpg' as politica_url %}
 {% static 'img/mundo.jpg' as mundo_url %}
 
+<div class=" shadow-lg w-100 justify-content-center d-flex " style=" height: 300px;">
+  <div id="carouselExampleAutoplaying" class="carousel slide w-50 p-4" data-bs-ride="carousel">
 
-<div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel"
-  style="margin-top: 60px; margin-bottom: 40px;">
+    <div class="carousel-inner" style=" height: 250px; ">
 
-  <div class="carousel-inner">
-    <div class="carousel-item active">
-      <div class="col-md-4 ratio ratio-21x9" style="object-fit: contain;">
-        <img src="{{ esportes_url }}" class="d-block w-100" alt="...">
-      </div>
-      <!-- <div class="carousel-caption d-none d-md-block ">
-        <p class=" fs-3 text-center text-light  p-2 rounded opacity-50">Notícias sobre Esportes</p>
-      </div> -->
-
-      <div class=" carousel-item">
-        <div class="col-md-4 ratio ratio-21x9" style="object-fit: contain;">
-          <img src="{{ clima_url }}" class="d-block w-100" alt="...">
-        </div>
-        <div class="carousel-caption d-none d-md-block">
-          <h5 class="text-light">Notícias sobre Clima</h5>
-        </div>
+      <div class="carousel-item active ratio ratio-21x9" style="object-fit: contain;">
+        <img src="{{ esportes_url }}" class="d-block w-100 rounded" alt="...">
       </div>
 
-      <div class="carousel-item">
-        <div class="col-md-4 ratio ratio-21x9" style="object-fit: contain;">
-          <img src="{{ saude_url }}" class="d-block w-100" alt="...">
-        </div>
-        <div class="carousel-caption d-none d-md-block">
-          <h5 class="text-light">Notícias sobre Saúde</h5>
-        </div>
+
+      <div class="carousel-item active ratio ratio-21x9" style="object-fit: contain;">
+        <img src="{{ clima_url }}" class="d-block w-100" alt="...">
       </div>
 
-      <div class="carousel-item">
-        <div class="col-md-4 ratio ratio-21x9" style="object-fit: contain;">
-          <img src="{{ educacao_url }}" class="d-block w-100" alt="...">
-        </div>
-        <div class="carousel-caption d-none d-md-block">
-          <h5 class="text-light">Notícias sobre Educação</h5>
-        </div>
+      <div class="carousel-item active ratio ratio-21x9" style="object-fit: contain;">
+        <img src="{{ saude_url }}" class="d-block w-100" alt="...">
+
       </div>
 
-      <div class="carousel-item">
-        <div class="col-md-4 ratio ratio-21x9" style="object-fit: contain;">
-          <img src="{{ entreterimento_url }}" class="d-block w-100" alt="...">
-        </div>
-        <div class="carousel-caption d-none d-md-block">
-          <h5 class="text-light">Notícias sobre Entreterimento</h5>
-        </div>
+      <div class="carousel-item active ratio ratio-21x9" style="object-fit: contain;">
+        <img src="{{ educacao_url }}" class="d-block w-100" alt="...">
+
       </div>
 
-      <div class="carousel-item">
-        <div class="col-md-4 ratio ratio-21x9" style="object-fit: contain;">
-          <img src="{{ meio_ambiente_url }}" class="d-block w-100" alt="...">
-        </div>
-        <div class="carousel-caption d-none d-md-block">
-          <h5 class="text-light">Notícias sobre Meio Ambiente</h5>
-        </div>
+      <div class="carousel-item active ratio ratio-21x9" style="object-fit: contain;">
+        <img src="{{ entreterimento_url }}" class="d-block w-100" alt="...">
+
       </div>
 
-      <div class="carousel-item">
-        <div class="col-md-4 ratio ratio-21x9" style="object-fit: contain;">
-          <img src="{{ politica_url }}" class="d-block w-100" alt="...">
-        </div>
-        <div class="carousel-caption d-none d-md-block">
-          <h5 class="text-light">Notícias sobre Política</h5>
-        </div>
+      <div class="carousel-item active ratio ratio-21x9" style="object-fit: contain;">
+        <img src="{{ meio_ambiente_url }}" class="d-block w-100" alt="...">
+
       </div>
 
-      <div class="carousel-item">
-        <div class="col-md-4 ratio ratio-21x9" style="object-fit: contain;">
-          <img src="{{ mundo_url }}" class="d-block w-100" alt="...">
-        </div>
-        <div class="carousel-caption d-none d-md-block">
-          <h5 class="bg-secondary text-light w-25 p-2">Notícias sobre Mundo</h5>
-        </div>
+      <div class="carousel-item active ratio ratio-21x9" style="object-fit: contain;">
+        <img src="{{ politica_url }}" class="d-block w-100" alt="...">
+
       </div>
+
+      <div class="carousel-item active ratio ratio-21x9" style="object-fit: contain;">
+        <img src="{{ mundo_url }}" class="d-block w-100" alt="...">
+      </div>
+
     </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying"
-      data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying"
-      data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
+
+
   </div>
+</div>
