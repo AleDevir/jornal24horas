@@ -90,6 +90,13 @@ admin.site.register(Autor)
 ### registrar as alterações em migrations
 ```
 python manage.py makemigrations <nome_aplicação>
+
+python manage.py makemigrations app_j24
+
+```
+### Mostrar o status das migrações.
+```
+python manage.py showmigrations
 ```
 
 ### Aplicar as alterações de migrations no db

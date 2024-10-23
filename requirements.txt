@@ -8,3 +8,5 @@ mypy-extensions
 pylint
 pytest
 pillow
+gunicorn
+whitenoise[brotli]

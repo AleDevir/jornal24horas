@@ -1,0 +1,10 @@
+auth123456
+
+python manage.py runserver
+
+python manage.py makemigrations app_j24
+
+python manage.py migrate
+
+# Convert static asset files
+python manage.py collectstatic --no-input
