@@ -28,6 +28,8 @@ class Categoria(models.Model):
     Categoria
     '''
     nome = models.CharField('Categoria', max_length=30)
+    imagem = models.ImageField(upload_to='', blank=True)
+
     criado_em = models.DateField(auto_now_add=True)
 
     def __str__(self):
