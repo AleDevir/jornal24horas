@@ -105,7 +105,6 @@ class NoticiaDetailView(DetailView):
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
 
-
 class NoticiasBaseListView(ListView):
     '''
     Listar as nóticias dos autores e editores
@@ -193,7 +192,7 @@ class HomeListView(NoticiasBaseListView):
     '''
     Listar as nóticias na página Home
     '''
-    # paginate_by = 4
+    paginate_by = 4
     publicada = True
     template_name = 'home.html'
 
@@ -242,3 +241,7 @@ class ChangePasswordView(PasswordChangeView):
     template_name = 'password_edit.html'
     def get_success_url(self):
         return reverse('home')
+
+
+
+   
