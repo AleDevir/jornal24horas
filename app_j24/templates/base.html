@@ -1,5 +1,8 @@
 {% load static %}
 {% load django_bootstrap5 %}
+{% static 'js/jquery-3.7.1.min.js' as jquery_url %}
+{% static 'js/jquery.waypoints.min.js' as waypoints_url %}
+{% static 'js/infinite.min.js' as infinite_url %}
 {% static 'icones/user_edit.png' as editar_url %}
 {% static 'icones/senha.png' as senha_url %}
 {% static 'icones/news.png' as news_url %}
@@ -11,15 +14,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+    <script src="{{jquery_url}}"></script>
+    <script src="{{waypoints_url}}"></script>
+    <script src="{{infinite_url}}"></script>
     <title>J24</title>
     {% load django_bootstrap5 %}
     {% bootstrap_css %}
     {% bootstrap_javascript %}
 </head>
 
-<body class="bg-body-primary " data-bs-theme="dark">
+<body data-bs-theme="dark">
     <div class="sticky-top bg-body border-bottom border-info">
-        <div class="  hstack d-flex">
+        <div class="hstack d-flex">
             <a href="{% url 'home' %}">
                 <div class="text-ligth m-3 p-2 rounded-circle btn btn-outline-info">J24</div>
             </a>

@@ -28,24 +28,16 @@
         </div>
 
     </div>
-    <!-- <div class=" d-flex "> -->
-    <!-- <div class="">
-            {% if noticia.publicada %}
-            <p class="text-secondary">Publicada {{noticia.publicada_em}} </p>
-            <p class="text-secondary">Útima atualização {{noticia.atualizacao_tempo}}</p>
-            <p class="text-secondary"> por {{noticia.autor}}</p>
-            {% else %}
-            <p class="text-secondary">Ultima atualização {{noticia.atualizacao_tempo}} por {{noticia.autor}}</p>
-            {% endif %}
-            {% for categoria in noticia.categorias.all %}
-            <p class="text-secondary">{{categoria.nome}}</p>
-            {% endfor %}
-        </div> -->
-    <!-- </div> -->
     <div class="d-flex text-center justify-content-center text-wrap" style="padding: 40px; ">
         <div class="fs-5" style="max-width: 680px; text-align: justify;">
             <p class="text-info fs-3">{{noticia.titulo}}</p>
-            <p class="">{{noticia.conteudo}}</p>
+
+            <p>
+                {{ noticia.conteudo|safe|linebreaks }}
+            </p><br>
+
+
+
         </div>
     </div>
 

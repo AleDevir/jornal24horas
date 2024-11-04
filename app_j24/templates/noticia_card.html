@@ -3,8 +3,8 @@
 {% static 'media' as media_url %}
 
 {% for uma_noticia in object_list %}
-<a href="{% url 'noticia-detail' uma_noticia.slug %}" class="  text-decoration-none">
-    <div class=" d-flex border-bottom " style="margin-bottom: 20px; flex-wrap: wrap; padding: 0;">
+<a href="{% url 'noticia-detail' uma_noticia.slug %}" class="infinite-item text-decoration-none">
+    <div class="d-flex border-bottom " style="margin-bottom: 20px; flex-wrap: wrap; padding: 0;">
         <div class="ratio ratio-16x9 " style="object-fit: contain; max-width: 340px;   margin-bottom: 10px;">
             <img src="{{media_url}}/{{uma_noticia.imagem}}" alt="{{uma_noticia.titulo}}" class="w-100 rounded">
         </div>

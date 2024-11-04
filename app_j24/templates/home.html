@@ -1,6 +1,14 @@
 {% extends "base.html" %}
 {% load django_bootstrap5 %}
 {% load static %}
+{% static 'js' as js_url %}
+
+{% comment %}
+{% static 'js/jquery.waypoints.min.js' as waypoints_url %}
+{% static 'js/infinite.min.js' as infinite_url %}
+{% endcomment %}
+
+{% static 'media' as media_url %}
 {% block content %}
 
 <div class="position-fixed w-100" style="z-index: 10;">
@@ -11,15 +19,33 @@
     {% include "carrossel.html" %}
 </div>
 
-<div style="margin-top: 60px; padding: 0; margin-left: 35px;">
-    <div class="row mt-3">
-        <div class="col-8 mt-3 mb-3">
-            {% include "noticia_card.html" %}
-
+<div style="margin-top: 60px; padding: 0; margin-left: 15px;">
+    <div class="justify-content-center row mt-3">
+        <div class="infinite-container mt-3 mb-3">
+            {% include 'noticia_card.html' %}
+            {% if page_obj.has_next %}
+            <div id="div-next" class="m-5 p-5 d-none">
+                <a class="infinite-more-link page-link text-info rounded m-1 "
+                    href="?page={{ page_obj.next_page_number }}&{{ pesquisa.urlencode }}"> &raquo;</a>
+            </div>
+            {% endif %}
         </div>
     </div>
-    <div class="m-5 p-5">
-        {% include "paginacao.html" %}
-    </div>
 </div>
+
+<script>
+    var infinite = new Waypoint.Infinite({
+        element: $('.infinite-container')[0],
+        offset: 'bottom-in-view',
+        onBeforePageLoad: function () {
+        },
+        onAfterPageLoad: function () {
+        },
+    });
+</script>
+<script>
+    $(window).on('load', function () {
+        console.log('LOAD...')
+    });
+</script>
 {% endblock %}
