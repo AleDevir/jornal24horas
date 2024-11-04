@@ -54,9 +54,6 @@ class NoticiaBaseView(PermissionRequiredMixin):
     '''
     model = Noticia
 
-    def get_success_url(self):
-        return reverse('noticias')
-
 class NoticiaCadastroView(NoticiaBaseView):
     '''
     Notícia Cadastro
@@ -74,6 +71,10 @@ class NoticiaCreateView(NoticiaCadastroView, CreateView):
             raise PermissionDenied('Permissão para adicionar notícia negada! Você não possui permissão necessária.')
         form.instance.autor = self.request.user
         return super().form_valid(form)
+    
+    def get_success_url(self):
+        log_user_action(request=self.request, obj=self.object, action='Incluiu')
+        return reverse('noticias')
 
 class NoticiaUpdateView(NoticiaCadastroView, UpdateView):
     '''
@@ -89,6 +90,10 @@ class NoticiaUpdateView(NoticiaCadastroView, UpdateView):
             raise PermissionDenied('Permissão para alterar a notícia negada! Você não é o autor da notícia.')
         form.instance.atualizada_em = datetime.now()
         return super().form_valid(form)
+    
+    def get_success_url(self):
+        log_user_action(request=self.request, obj=self.object, action='Alterou')
+        return reverse('noticias')
 
 class NoticiaDeleteView(NoticiaBaseView, DeleteView):
     '''
@@ -104,6 +109,10 @@ class NoticiaDeleteView(NoticiaBaseView, DeleteView):
         if not eh_editor and self.object.autor != self.request.user:
             raise PermissionDenied('Permissão para excluir a notícia negada! Você não é o autor da notícia.')
         return super().form_valid(form)
+    
+    def get_success_url(self):
+        log_user_action(request=self.request, obj=self.object, action='Excluiu')
+        return reverse('noticias')
 
 class NoticiaBaseDetailView(DetailView):
     '''
@@ -261,9 +270,11 @@ def publicar_noticia(request, noticia_id: int, publicado: int) -> HttpResponse:
         if publicado == 1:
             noticia.publicada = True
             noticia.publicada_em = datetime.now()
+            log_user_action(request=request, obj=noticia, action='Publicou')
         else:
             noticia.publicada = False
             noticia.publicada_em = None
+            log_user_action(request=request, obj=noticia, action='Retirou a publicação')
         noticia.save()
     except Noticia.DoesNotExist as not_found:
         raise Http404(
@@ -288,13 +299,24 @@ class UserUpdateView(UpdateView):
     fields = ['username', 'email']
     template_name = 'user_edit.html'
     def get_success_url(self):
-        
+        log_user_action(
+            request=self.request,
+            obj=self.object,
+            action='alterou perfil',
+            object_name='Usuário'
+        )
         return reverse('home')
 
 class ChangePasswordView(PasswordChangeView):
     form_class = PasswordChangeForm
     template_name = 'password_edit.html'
     def get_success_url(self):
+        log_user_action(
+            request=self.request,
+            obj=self.request.user,
+            action='trocou a senha',
+            object_name='Usuário'
+        )
         return reverse('home')
 
 class CategoriasView(PermissionRequiredMixin, ListView):
@@ -302,7 +324,7 @@ class CategoriasView(PermissionRequiredMixin, ListView):
     Visualiza a área administrativa de categorias
     '''
     model = Categoria
-    permission_required = "app_noticias.view_categoria"
+    permission_required = "app_j24.view_categoria"
     context_object_name = 'categorias'
     template_name = 'categorias_table.html'
       
@@ -315,11 +337,11 @@ class CadastrarCategoriaView(PermissionRequiredMixin, CreateView):
     '''
     model = Categoria
     form_class = CategoriaForm
-    permission_required = "app_noticias.add_categoria"
+    permission_required = "app_j24.add_categoria"
     template_name = 'categoria_cadastro.html'
 
     def get_success_url(self):
-        log_user_action(request=self.request, obj=self.object, action='incluiu a')
+        log_user_action(request=self.request, obj=self.object, action='Incluiu')
         return reverse('categorias')
     
 class EditarCategoriaView(PermissionRequiredMixin, UpdateView):
@@ -328,10 +350,10 @@ class EditarCategoriaView(PermissionRequiredMixin, UpdateView):
     '''
     model = Categoria
     form_class = CategoriaForm
-    permission_required = "app_noticias.change_categoria"
+    permission_required = "app_j24.change_categoria"
     template_name = 'categoria_cadastro.html'   
     def get_success_url(self):
-        log_user_action(request=self.request, obj=self.object, action='alterou a')
+        log_user_action(request=self.request, obj=self.object, action='Alterou')
         return reverse('categorias')
     
 class ExcluirCategoriaView(PermissionRequiredMixin, DeleteView):
@@ -339,12 +361,12 @@ class ExcluirCategoriaView(PermissionRequiredMixin, DeleteView):
     Visualiza a decisão de deletar uma categoria na área administrativa de categorias
     '''
     model = Categoria
-    permission_required = "app_noticias.delete_categoria"
+    permission_required = "app_j24.delete_categoria"
     template_name = 'categoria_confirm_delete.html'
     context_object_name = 'categoria'
 
     def get_success_url(self):
-        log_user_action(request=self.request, obj=self.object, action='excluiu a')
+        log_user_action(request=self.request, obj=self.object, action='Excluiu')
         return reverse('categorias')
 
 class UserActionView(PermissionRequiredMixin, ListView):
@@ -352,7 +374,7 @@ class UserActionView(PermissionRequiredMixin, ListView):
     Visualiza a área auditoria
     '''
     model = UserAction
-    permission_required = "app_noticias.view_useraction"
+    permission_required = "app_j24.view_useraction"
     context_object_name = 'actions'
     template_name = 'useractions_table.html'
     paginate_by = 20
