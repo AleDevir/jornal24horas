@@ -94,6 +94,13 @@ class NoticiaBaseDetailView(DetailView):
     model = Noticia
     template_name = 'noticia.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        ids_das_categorias = [categoria.id for categoria in self.object.categorias.all()]
+        noticias_relacionadas = Noticia.objects.filter(categorias__in=ids_das_categorias,publicada=True).exclude(id=self.object.id).distinct().order_by('-publicada_em')
+        context['object_list'] = noticias_relacionadas
+        
+        return context
 
     def acrescentar_visualizacao(self, noticia_id: int = 0) -> None:
         '''

@@ -18,19 +18,10 @@
             <p class="text-secondary">Há {{uma_noticia.publicacao_tempo}}</p>
             {% endif %}
 
-            <p><small class="text-secondary">
-                    {% for categoria in uma_noticia.categorias.all %}
-                    {{categoria.nome}}<br />
-                    {% endfor %}
-                </small></p>
-            {% if uma_noticia.num_visualizacoes == 0 %}
-            <p class="text-secondary"><small>Não lida</small></p>
-            {% else %}
+            <p class="text-secondary">Em {% for cate in uma_noticia.categorias.all %}{{cate.nome}}
+                {% if not forloop.last %} e {% endif %}{% endfor %}
+            </p>
 
-            <p class="responsive text-secondary"><small>{{ uma_noticia.num_visualizacoes }}
-                    leitura{{ uma_noticia.num_visualizacoes|pluralize }}</small></p>
-
-            {% endif %}
         </div>
     </div>
 </a>

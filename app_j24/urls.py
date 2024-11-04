@@ -21,7 +21,7 @@ APP_NAME = "app_j24"
 
 urlpatterns = [
     path("", HomeListView.as_view(), name='home'),
-    path("<slug:slug>/", NoticiaDetailView.as_view(), name="noticia-ver"),
+    path("noticia/<slug:slug>/", NoticiaDetailView.as_view(), name="noticia-ver"),
     path('adm/noticias/<int:pk>/', NoticiaAdmDetailView.as_view(), name="noticia-adm-detail"),
     path("noticias/", NoticiasListView.as_view(), name="noticias"),
     path('noticias/editor/publicar/<int:noticia_id>/<int:publicado>', views.publicar_noticia, name='publicar_noticia'),
