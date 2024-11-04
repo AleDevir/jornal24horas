@@ -4,51 +4,75 @@
 {% block content %}
 {% static 'media' as media_url %}
 
-<a href="javascript:history.back()" class="mb-3 mt-5 ms-3 text-decoration-none btn btn-outline-info">Voltar</a>
-
-<div class=" p-5 ">
-
+<div class="d-flex flex-column justify-content-center responsive-padding">
+    <div class="d-flex justify-content-center p-3 text-info mt-5">
+        <a href="https://www.whatsapp.com/?lang=pt_BR" target="_blank">
+            <img src="{% static 'icones/whatsapp.png' %}" alt="logo" width="50" class="px-3" style="color: aqua;">
+        </a>
+        <a href="https://www.instagram.com/" target="_blank">
+            <img src="{% static 'icones/instagram.png' %}" alt="logo" width="50" class="px-3" style="color: aqua;">
+        </a>
+        <a href="https://web.facebook.com/?locale=pt_BR&_rdc=1&_rdr" target="_blank">
+            <img src="{% static 'icones/facebook.png' %}" alt="logo" width="50" class="px-3" style="color: aqua;">
+        </a>
+        <a href="https://x.com/?lang=pt-br" target="_blank">
+            <img src="{% static 'icones/x.png' %}" alt="logo" width="50" class="px-3" style="color: aqua;">
+        </a>
+    </div>
     <div class="d-flex  justify-content-center ">
-        <div class="d-flex flex-column" style="width: 740px;">
-            <div class="ratio ratio-1x1 mb-3" style="object-fit: contain; ">
+        <div class="d-flex flex-column responsive" style="width: 540px;">
+            <div class="ratio ratio-16x9 mb-3" style="object-fit: contain; ">
                 <img src=" {{media_url}}/{{noticia.imagem}}" class="rounded w-100" alt="{{uma_noticia.titulo}}">
             </div>
-            <div class="">
+            <div class="responsive">
+                <p class="text-secondary">Por {{noticia.autor}}</p>
                 {% if noticia.publicada %}
-                <p class="text-secondary">Publicada {{noticia.publicada_em}}</p>
-                <p class="text-secondary">Útima atualização {{noticia.atualizacao_tempo}}</p>
-                <p class="text-secondary"> por {{noticia.autor}}</p>
+                <small>
+                    <p class="text-secondary">Publicada {{noticia.publicada_em}} - Atualizado há
+                        {{noticia.atualizacao_tempo}}
+                    </p>
+                </small>
                 {% else %}
-                <p class="text-secondary">Ultima atualização {{noticia.atualizacao_tempo}} por {{noticia.autor}}</p>
-                {% endif %}
-                {% for categoria in noticia.categorias.all %}
-                <p class="text-secondary">Em {{categoria.nome}}</p>
-                {% endfor %}
+                <small>
+                    <p class="text-secondary">Atualizado há {{noticia.atualizacao_tempo}}</p>
+                    {% endif %}
+                </small>
+                <small>
+                    <p class="text-secondary">
+                        {% if noticia.num_visualizacoes == 0 %}Não lida{% else %}
+                        {{ noticia.num_visualizacoes }} leitura{{ noticia.num_visualizacoes|pluralize}}{% endif %}
+                        em {% for cate in noticia.categorias.all %}{{cate.nome}}{% if not forloop.last %} e
+                        {% endif %}{% endfor %}
+                    </p>
+                </small>
+
             </div>
         </div>
-
     </div>
-    <!-- <div class=" d-flex "> -->
-    <!-- <div class="">
-            {% if noticia.publicada %}
-            <p class="text-secondary">Publicada {{noticia.publicada_em}} </p>
-            <p class="text-secondary">Útima atualização {{noticia.atualizacao_tempo}}</p>
-            <p class="text-secondary"> por {{noticia.autor}}</p>
-            {% else %}
-            <p class="text-secondary">Ultima atualização {{noticia.atualizacao_tempo}} por {{noticia.autor}}</p>
-            {% endif %}
-            {% for categoria in noticia.categorias.all %}
-            <p class="text-secondary">{{categoria.nome}}</p>
-            {% endfor %}
-        </div> -->
-    <!-- </div> -->
-    <div class="d-flex text-center justify-content-center text-wrap" style="padding: 40px; ">
-        <div class="fs-5" style="max-width: 680px; text-align: justify;">
-            <p class="text-info fs-3">{{noticia.titulo}}</p>
-            <p class="">{{noticia.conteudo}}</p>
-        </div>
+
+    <div class="responsive" style="text-align: justify;">
+        <p class=" text-info text-center mt-3">{{noticia.titulo}}</p>
+        {% for paragrafo in noticia.paragrafos %}
+        <small>
+            <p style="text-indent: 5%;" class="responsive">
+                {{ paragrafo|safe }}
+            </p>
+        </small>
+        {% endfor %}
+        {% if "http" in noticia.fonte_informacao %}
+        <a href="{{noticia.fonte_informacao}}" target="_blank" class=" text-decoration-none"><small
+                class="text-info responsive">Fonte</small></a>
+        {% else %}
+        <p class="text-secondary responsive"><small>Fonte: {{noticia.fonte_informacao}}</small></p> </small>
+        {% endif %}
+    </div>
+
+    <div class=" mt-3 mb-3  rounded" style="background-color: #343638; padding: 20px;">
+        <p class="text-info responsive" style="margin-bottom: 40px; font-size: larger;">Mais do Jornal J24 </p>
+        {% include "noticia_card.html" %}
     </div>
 
 </div>
-
+<a href="javascript:history.back()"
+    class="mb-3 mt-5 ms-3 text-decoration-none btn btn-outline-info responsive">Voltar</a>
 {% endblock %}

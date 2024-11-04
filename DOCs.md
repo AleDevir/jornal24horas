@@ -5,3 +5,8 @@
 
 [Django-pylint](https://github.com/pylint-dev/pylint-django)
 
+[JQuery](https://jquery.com/)
+
+[Waypoints](http://imakewebthings.com/waypoints/)
+
+[Waypoints API](http://imakewebthings.com/waypoints/api/waypoint/)

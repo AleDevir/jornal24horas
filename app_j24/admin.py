@@ -8,7 +8,8 @@ from .models import (
 
     MyUser,
     Categoria,
-    Noticia
+    Noticia,
+    UserAction
 )
 
 class NoticiaAdmin(admin.ModelAdmin):
@@ -35,9 +36,31 @@ class NoticiaAdmin(admin.ModelAdmin):
             obj.autor = request.user
         super().save_model(request, obj, form, change)
 
+class UserActionAdmin(admin.ModelAdmin):
+    '''
+    UserActionAdmin
+    '''
+    list_filter = ['user', 'object_name']
+    search_fields = ['user__username']
+
+    def save_model(self, request, obj, form, change):
+        if not obj.pk:
+            obj.autor = request.user
+        super().save_model(request, obj, form, change)
+
+class CategoriaAdmin(admin.ModelAdmin):
+    '''
+    CategoriaAdmin
+    '''
+    list_display = [
+        'nome',
+        'imagem',
+    ]
+
+    search_fields = ['nome']
+
+
 admin.site.register(MyUser, UserAdmin)
 admin.site.register(Noticia, NoticiaAdmin)
-
-admin.site.register([
-    Categoria,
-])
+admin.site.register(UserAction, UserActionAdmin)
+admin.site.register(Categoria, CategoriaAdmin)
