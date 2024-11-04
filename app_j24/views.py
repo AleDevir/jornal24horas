@@ -87,12 +87,19 @@ class NoticiaDeleteView(NoticiaBaseView, DeleteView):
             raise PermissionDenied('Permissão para excluir a notícia negada! Você não é o autor da notícia.')
         return super().form_valid(form)
 
-class NoticiaDetailView(DetailView):
+class NoticiaBaseDetailView(DetailView):
     '''
-    Listar as nóticias na página Home
+    Classe Base dos detalhes de uma notícia
     '''
     model = Noticia
     template_name = 'noticia.html'
+
+
+    def acrescentar_visualizacao(self, noticia_id: int = 0) -> None:
+        '''
+        Estrutura para uma classe filha implementar.
+        '''
+        pass
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -102,8 +109,31 @@ class NoticiaDetailView(DetailView):
         pode_ver_noticia_nao_publicada: bool = eh_editor or eh_autor_da_noticia
         if not self.object.publicada and not pode_ver_noticia_nao_publicada:
             raise PermissionDenied('Permissão para ver a notícia negada! Está notícia não foi publicada.')
+        
+        identificador = kwargs.get('pk', 0)
+        self.acrescentar_visualizacao(identificador)
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
+
+class NoticiaDetailView(NoticiaBaseDetailView):
+    '''
+    Detalhe da notícia no Jornal 24Horas
+    '''
+
+    def acrescentar_visualizacao(self, noticia_id: int = 0):
+        '''
+        Uma notícia visualizada no Jornal 24Horas deve ser acrescentado
+        o seu número de visualizações.
+        '''
+        if self.object.publicada and not noticia_id:
+            self.object.num_visualizacoes += 1
+            self.object.save()    
+
+class NoticiaAdmDetailView(PermissionRequiredMixin, NoticiaBaseDetailView):
+    '''
+    Detalhe da Notícia na Área Administrativa.
+    '''
+    permission_required = "app_j24.view_noticia"
 
 class NoticiasBaseListView(ListView):
     '''
@@ -135,7 +165,6 @@ class NoticiasBaseListView(ListView):
                 "object_list": self.get_queryset(),
             })
 
-        # https://docs.djangoproject.com/en/5.1/topics/pagination/
         noticias = self.get_queryset()
         paginator = Paginator(noticias, self.paginate_by)
         page_obj = paginator.get_page(1)

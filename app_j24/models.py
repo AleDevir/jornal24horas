@@ -27,9 +27,8 @@ class Categoria(models.Model):
     '''
     Categoria
     '''
-    nome = models.CharField('Categoria', max_length=30)
-    imagem = models.ImageField(upload_to='', blank=True)
-
+    nome = models.CharField('Categoria', max_length=30, unique=True)
+    imagem = models.ImageField(upload_to='', blank=True, null=True)
     criado_em = models.DateField(auto_now_add=True)
 
     def __str__(self):
@@ -54,6 +53,8 @@ class Noticia(models.Model):
     autor = models.ForeignKey(MyUser, on_delete=models.RESTRICT, editable=False)
     categorias = models.ManyToManyField(Categoria)
     publicada = models.BooleanField('publicada', default=False )
+    num_visualizacoes = models.IntegerField(default=0, verbose_name='Número de visualizações', editable=False)
+    fonte_informacao = models.CharField('Fonte', max_length=400, null=True )
 
     def _calcular_tempo_da_atualizacao(self) -> str:
         '''
@@ -71,6 +72,14 @@ class Noticia(models.Model):
 
     publicacao_tempo = property(_calcular_tempo_da_publicacao)
     
+    def _paragrafos(self) -> list[str]:
+        '''
+        Transforma o conteúdo da notícia em parágrafos.
+        '''
+        return self.conteudo.split('\n')
+    
+    paragrafos = property(_paragrafos)
+
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.titulo)
@@ -96,3 +105,18 @@ class Noticia(models.Model):
         if self.publicada:
             return  f"Título: {str(self.titulo)} - PUBLICADA"
         return f"Título: {str(self.titulo)}"
+
+
+class UserAction(models.Model):
+    '''
+    User Action
+    '''
+    user = models.ForeignKey(MyUser, on_delete=models.RESTRICT, editable=False, help_text='Usuário que realizou a ação')
+    action = models.CharField(max_length=255, editable=False, help_text='Ação realizada no objeto.')
+    object_id = models.IntegerField('Identificador', editable=False, help_text='ID do objeto manipulado')
+    object_name = models.CharField('Modelo', max_length=20, editable=False, help_text='Nome do Modelo do objeto manipulado')
+    object_text = models.CharField('Texto', max_length=100, editable=False, help_text='Texto (__str__) do objeto manipulado')
+    timestamp = models.DateTimeField(auto_now_add=True, editable=False, help_text='Data da ação')
+
+    def __str__(self):
+        return f'{self.user.username} {self.action} {self.object_name} de ID={self.object_id} EM:{self.timestamp} - {self.object_text}'
