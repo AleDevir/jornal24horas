@@ -8,13 +8,15 @@
 {% static 'icones/news.png' as news_url %}
 {% static 'icones/editor.png' as editor_url %}
 {% static 'icones/logout.png' as logout_url %}
+{% static 'css/estilo.css' as css_url %}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
+    <link rel="stylesheet" href="{{css_url}}">
     <script src="{{jquery_url}}"></script>
     <script src="{{waypoints_url}}"></script>
     <script src="{{infinite_url}}"></script>
