@@ -22,13 +22,31 @@ from django.http import (
 )
 from django.template.defaultfilters import slugify
 from django.urls import reverse
-
+from django.http import HttpRequest
+from django.db.models import Model
 from django.views.generic import  DetailView, ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
-from .models import Categoria, Noticia, MyUser
-from .forms import RegistrationForm
+from .models import Categoria, Noticia, MyUser, UserAction
+from .forms import RegistrationForm, CategoriaForm
 
+def log_user_action(request : HttpRequest, obj: Model, action: str, object_name: str = '') -> None:
+    '''
+    Registro das ações de autores e editores
+    '''
+    UserAction.objects.create(
+        user=request.user,
+        action=action,
+        object_id = obj.pk,
+        object_name = obj.__doc__ if not object_name else object_name,
+        object_text = str(obj)
+    )
+
+def root(request) -> HttpResponse:
+    '''
+    Redirecionamento de root para home
+    '''
+    return HttpResponseRedirect(reverse("home"))
 
 class NoticiaBaseView(PermissionRequiredMixin):
     '''
@@ -270,6 +288,7 @@ class UserUpdateView(UpdateView):
     fields = ['username', 'email']
     template_name = 'user_edit.html'
     def get_success_url(self):
+        
         return reverse('home')
 
 class ChangePasswordView(PasswordChangeView):
@@ -278,6 +297,71 @@ class ChangePasswordView(PasswordChangeView):
     def get_success_url(self):
         return reverse('home')
 
+class CategoriasView(PermissionRequiredMixin, ListView):
+    '''
+    Visualiza a área administrativa de categorias
+    '''
+    model = Categoria
+    permission_required = "app_noticias.view_categoria"
+    context_object_name = 'categorias'
+    template_name = 'categorias_table.html'
+      
+    def get_success_url(self):
+        return reverse('categorias')
+    
+class CadastrarCategoriaView(PermissionRequiredMixin, CreateView):
+    '''
+    Visualiza o cadastro de categoria na área administrativa de categorias
+    '''
+    model = Categoria
+    form_class = CategoriaForm
+    permission_required = "app_noticias.add_categoria"
+    template_name = 'categoria_cadastro.html'
 
+    def get_success_url(self):
+        log_user_action(request=self.request, obj=self.object, action='incluiu a')
+        return reverse('categorias')
+    
+class EditarCategoriaView(PermissionRequiredMixin, UpdateView):
+    '''
+    Visualiza a edição de categoria na área administrativa de categorias
+    '''
+    model = Categoria
+    form_class = CategoriaForm
+    permission_required = "app_noticias.change_categoria"
+    template_name = 'categoria_cadastro.html'   
+    def get_success_url(self):
+        log_user_action(request=self.request, obj=self.object, action='alterou a')
+        return reverse('categorias')
+    
+class ExcluirCategoriaView(PermissionRequiredMixin, DeleteView):
+    '''
+    Visualiza a decisão de deletar uma categoria na área administrativa de categorias
+    '''
+    model = Categoria
+    permission_required = "app_noticias.delete_categoria"
+    template_name = 'categoria_confirm_delete.html'
+    context_object_name = 'categoria'
+
+    def get_success_url(self):
+        log_user_action(request=self.request, obj=self.object, action='excluiu a')
+        return reverse('categorias')
+
+class UserActionView(PermissionRequiredMixin, ListView):
+    '''
+    Visualiza a área auditoria
+    '''
+    model = UserAction
+    permission_required = "app_noticias.view_useraction"
+    context_object_name = 'actions'
+    template_name = 'useractions_table.html'
+    paginate_by = 20
+
+    def get_queryset(self):
+        return UserAction.objects.all().order_by('-timestamp')
+ 
+    def get_success_url(self):
+        return reverse('logs')
+  
 
    

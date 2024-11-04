@@ -4,6 +4,10 @@ URLs Aplicação
 from django.urls import path
 from . import views
 from .views import (
+    CategoriasView,
+    CadastrarCategoriaView,
+    EditarCategoriaView,
+    ExcluirCategoriaView,
     ChangePasswordView,
     HomeListView,
     NoticiasListView,
@@ -14,22 +18,36 @@ from .views import (
     NoticiaAdmDetailView,
     SignUpView,
     UserUpdateView,
+    UserActionView,
 )
 
 APP_NAME = "app_j24"
 
 
 urlpatterns = [
-    path("", HomeListView.as_view(), name='home'),
-    path("noticia/<slug:slug>/", NoticiaDetailView.as_view(), name="noticia-ver"),
-    path('adm/noticias/<int:pk>/', NoticiaAdmDetailView.as_view(), name="noticia-adm-detail"),
-    path("noticias/", NoticiasListView.as_view(), name="noticias"),
-    path('noticias/editor/publicar/<int:noticia_id>/<int:publicado>', views.publicar_noticia, name='publicar_noticia'),
-    path('noticias/cadastro/', NoticiaCreateView.as_view(), name='cadastro-noticias'),
-    path('noticias/cadastro/<int:pk>', NoticiaUpdateView.as_view(), name='atualizar-noticia'),
-    path('noticias/excluir/<int:pk>', NoticiaDeleteView.as_view(), name='excluir-noticia'),
+    # Área Pública da Notícia
+    path('', views.root, name='root'),
+    path("j24/", HomeListView.as_view(), name='home'),
+    path("j24/<slug:slug>/", NoticiaDetailView.as_view(), name="noticia-ver"),
+
+    # Área Pública do usuário
     path("register/", SignUpView.as_view(), name='registrar-usuario'),
     path('register/edit/user/<int:pk>', UserUpdateView.as_view(), name='atualizar-usuario'),
     path('register/edit/password/<int:pk>', ChangePasswordView.as_view(), name='atualizar-senha'),
-    path("<slug:slug>/", NoticiaDetailView.as_view(), name="noticia-detail"),
+
+    # Área de Editores e Autores
+    path("adm/noticias/", NoticiasListView.as_view(), name="noticias"),
+    path('adm/noticias/<int:pk>/', NoticiaAdmDetailView.as_view(), name="noticia-adm-detail"),
+    path('adm/noticias/cadastro/', NoticiaCreateView.as_view(), name='cadastro-noticias'),
+    path('adm/noticias/<int:pk>/cadastro/', NoticiaUpdateView.as_view(), name='atualizar-noticia'),
+    path('adm/noticias/<int:pk>/exclusao/', NoticiaDeleteView.as_view(), name='excluir-noticia'),
+    path('adm/logs/', UserActionView.as_view(), name='logs'),
+
+    # Área de Editores
+    path('adm/noticias/<int:noticia_id>/publicado/<int:publicado>', views.publicar_noticia, name='publicar_noticia'),
+    path('adm/categorias/', CategoriasView.as_view(), name='categorias'),
+    path('adm/categorias/cadastro/', CadastrarCategoriaView.as_view(), name='cadastrar_categoria'),
+    path('adm/categorias/<int:pk>/cadastro/', EditarCategoriaView.as_view(), name='editar_categoria'),
+    path('adm/categorias/<int:pk>/remove/', ExcluirCategoriaView.as_view(), name='excluir_categoria'),
+
 ]

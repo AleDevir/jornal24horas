@@ -7,6 +7,8 @@
 {% static 'icones/senha.png' as senha_url %}
 {% static 'icones/news.png' as news_url %}
 {% static 'icones/editor.png' as editor_url %}
+{% static 'icones/log.png' as log_url %}
+{% static 'icones/categoria.png' as categoria_url %}
 {% static 'icones/logout.png' as logout_url %}
 {% static 'css/estilo.css' as css_url %}
 <!DOCTYPE html>
@@ -53,11 +55,21 @@
                     <li class="dropdown-item d-flex "><img src="{{ news_url}}" width="20" height="20" class="mt-1" />
                         <a href="{% url 'noticias' %}" class="dropdown-item text-info">Minhas noticias</a>
                     </li>
+                    <li class="dropdown-item d-flex "><img src="{{ log_url }}" width="20" height="20" class="mt-1" />
+                        <a href="{% url 'logs' %}" class="dropdown-item text-info" type="button">Logs</a>
+                    </li>
                     {% endif %}
 
                     {% if perms.app_j24.pode_publicar %}
                     <li class="dropdown-item d-flex "><img src="{{editor_url}}" width="20" height="20" class="mt-1" />
                         <a href="{% url 'noticias' %}" class="dropdown-item text-info" type="button">Publicar</a>
+                    </li>
+                    <li class="dropdown-item d-flex "><img src="{{ categoria_url }}" width="20" height="20"
+                            class="mt-1" />
+                        <a href="{% url 'categorias' %}" class="dropdown-item text-info" type="button">Categorias</a>
+                    </li>
+                    <li class="dropdown-item d-flex "><img src="{{ log_url }}" width="20" height="20" class="mt-1" />
+                        <a href="{% url 'logs' %}" class="dropdown-item text-info" type="button">Logs</a>
                     </li>
                     {% endif %}
 
