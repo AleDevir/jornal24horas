@@ -20,6 +20,7 @@ from django.http import (
     Http404, 
     QueryDict,
 )
+from django.shortcuts import get_object_or_404
 from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.http import HttpRequest
@@ -27,8 +28,8 @@ from django.db.models import Model
 from django.views.generic import  DetailView, ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
-from .models import Categoria, Noticia, MyUser, UserAction
-from .forms import RegistrationForm, CategoriaForm, NoticiaForm
+from .models import Categoria, Noticia, MyUser, UserAction, Comentario
+from .forms import RegistrationForm, CategoriaForm, NoticiaForm, ComentarioForm
 
 def log_user_action(request : HttpRequest, obj: Model, action: str, object_name: str = '') -> None:
     '''
@@ -119,6 +120,7 @@ class NoticiaBaseDetailView(DetailView):
         ids_das_categorias = [categoria.id for categoria in self.object.categorias.all()]
         noticias_relacionadas = Noticia.objects.filter(categorias__in=ids_das_categorias,publicada=True).exclude(id=self.object.id).distinct().order_by('-publicada_em')
         context['object_list'] = noticias_relacionadas
+        context['comentarios'] = Comentario.objects.filter(noticia=self.object).order_by('-criado_em')
         
         return context
 
@@ -258,21 +260,16 @@ def publicar_noticia(request, noticia_id: int, publicado: int) -> HttpResponse:
     '''
     Publicar Notícia
     '''
-    try:
-        noticia = Noticia.objects.get(pk=noticia_id)
-        if publicado == 1:
-            noticia.publicada = True
-            noticia.publicada_em = datetime.now()
-            log_user_action(request=request, obj=noticia, action='Publicou')
-        else:
-            noticia.publicada = False
-            noticia.publicada_em = None
-            log_user_action(request=request, obj=noticia, action='Retirou a publicação')
-        noticia.save()
-    except Noticia.DoesNotExist as not_found:
-        raise Http404(
-            f"Notícia não encontrada! Não foi possível publicar a Notícia de ID={noticia_id} porque ela não existe na base de dados."
-        ) from not_found
+    noticia = get_object_or_404(Noticia, pk=noticia_id)
+    if publicado == 1:
+        noticia.publicada = True
+        noticia.publicada_em = datetime.now()
+        log_user_action(request=request, obj=noticia, action='Publicou')
+    else:
+        noticia.publicada = False
+        noticia.publicada_em = None
+        log_user_action(request=request, obj=noticia, action='Retirou a publicação')
+    noticia.save()
     return HttpResponseRedirect(reverse("noticias"))
 
 class SignUpView(CreateView):
@@ -377,6 +374,22 @@ class UserActionView(PermissionRequiredMixin, ListView):
  
     def get_success_url(self):
         return reverse('logs')
-  
 
-   
+def add_comentario(request):
+    '''
+    Adicionar um comentário para a notícia
+    '''
+    if not request.user.is_authenticated:
+        raise PermissionDenied('Permissão para adicionar comentário da notícia negado! Você não possui permissão necessária.')
+    if request.method == "POST":
+        noticia_id = request.POST['noticia_id']
+        noticia = get_object_or_404(Noticia, pk=noticia_id)
+        Comentario.objects.create(
+            conteudo=request.POST['conteudo'],
+            noticia=noticia,
+            usuario=request.user,
+        )
+
+    return HttpResponseRedirect(reverse("noticia-ver", args=(noticia.slug,)))
+
+

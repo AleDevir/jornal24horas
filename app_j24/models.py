@@ -120,3 +120,25 @@ class UserAction(models.Model):
 
     def __str__(self):
         return f'{self.user.username} {self.action} {self.object_name} de ID={self.object_id} EM:{self.timestamp} - {self.object_text}'
+
+class Comentario(models.Model):
+    '''
+    Comentário do usuário sobre a notícia
+    '''
+    conteudo= models.TextField('Conteúdo', max_length=3000, default='')
+    usuario = models.ForeignKey(MyUser, on_delete=models.RESTRICT, editable=False)
+    noticia = models.ForeignKey(Noticia, on_delete=models.RESTRICT)
+    criado_em = models.DateTimeField('Criado', help_text='dd/mm/yyyy hh:MM', auto_now_add=True)
+
+    class Meta:
+        '''
+        Metamodelo
+        '''
+        db_table = 'comentarios'
+        
+
+    def __str__(self):
+        '''
+        str
+        '''
+        return f"usuario: {str(self.usuario)}"
