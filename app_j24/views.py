@@ -28,7 +28,7 @@ from django.views.generic import  DetailView, ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
 from .models import Categoria, Noticia, MyUser, UserAction
-from .forms import RegistrationForm, CategoriaForm
+from .forms import RegistrationForm, CategoriaForm, NoticiaForm
 
 def log_user_action(request : HttpRequest, obj: Model, action: str, object_name: str = '') -> None:
     '''
@@ -48,24 +48,14 @@ def root(request) -> HttpResponse:
     '''
     return HttpResponseRedirect(reverse("home"))
 
-class NoticiaBaseView(PermissionRequiredMixin):
-    '''
-    Manter Notícia BASE
-    '''
-    model = Noticia
-
-class NoticiaCadastroView(NoticiaBaseView):
-    '''
-    Notícia Cadastro
-    '''
-    fields = ['titulo', 'subtitulo', 'conteudo',  'categorias', 'imagem']
-    template_name = 'cadastro_noticia.html'
-
-class NoticiaCreateView(NoticiaCadastroView, CreateView):
+class NoticiaCreateView(PermissionRequiredMixin, CreateView):
     '''
     Notícia Criar
     '''
+    model = Noticia
+    form_class = NoticiaForm
     permission_required = "app_j24.add_noticia"
+    template_name = 'cadastro_noticia.html'
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         if not self.request.user.has_perm('app_j24.add_noticia'):
             raise PermissionDenied('Permissão para adicionar notícia negada! Você não possui permissão necessária.')
@@ -76,12 +66,14 @@ class NoticiaCreateView(NoticiaCadastroView, CreateView):
         log_user_action(request=self.request, obj=self.object, action='Incluiu')
         return reverse('noticias')
 
-class NoticiaUpdateView(NoticiaCadastroView, UpdateView):
+class NoticiaUpdateView(PermissionRequiredMixin, UpdateView):
     '''
     Atualiza a Notícia
     '''
     permission_required = "app_j24.change_noticia"
-
+    model = Noticia
+    form_class = NoticiaForm    
+    template_name = 'cadastro_noticia.html'
     def form_valid(self, form: BaseModelForm) -> HttpResponse: 
         eh_editor: bool = self.request.user.has_perm('app_j24.pode_publicar')
         if self.object.publicada and not eh_editor:
@@ -95,11 +87,12 @@ class NoticiaUpdateView(NoticiaCadastroView, UpdateView):
         log_user_action(request=self.request, obj=self.object, action='Alterou')
         return reverse('noticias')
 
-class NoticiaDeleteView(NoticiaBaseView, DeleteView):
+class NoticiaDeleteView(PermissionRequiredMixin, DeleteView):
     '''
     Excluir Notícia
     '''
     permission_required = "app_j24.delete_noticia"
+    model = Noticia
     template_name = 'noticia_confirm_delete.html'  
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
