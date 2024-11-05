@@ -1,0 +1,21 @@
+{% load static %}
+{% load django_bootstrap5 %}
+
+
+
+
+
+<div class="d-flex col-auto  justify-content-center mt-5 p-3 ">
+    <div class=" shadow-lg p-5 mb-5 rounded w-100 " id="multiCollapseExample1">
+        <p class="text-info">{{ user.get_username }}</p>
+        <form method="post" action="{% url 'adicionar-comentario' %}">
+            {% csrf_token %}
+            <textarea name="conteudo" class="form-control w-100 mb-2"></textarea>
+            <input type="hidden" name="noticia_id" value="{{ noticia.id }}">
+            <button class="btn btn-outline-info" type="submit">Comentar</button>
+        </form>
+        {% for coment in comentarios %}
+        <p>{{coment.usuario.username}} - {{coment.conteudo}}</p>
+        {% endfor %}
+    </div>
+</div>

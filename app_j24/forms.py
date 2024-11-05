@@ -5,7 +5,7 @@ Modulo Forms
 from django import forms
 from django.forms import EmailField
 from django.contrib.auth.forms import UserCreationForm
-from .models import MyUser, Categoria, Noticia
+from .models import MyUser, Categoria, Noticia, Comentario
 
 class RegistrationForm(UserCreationForm):
     '''
@@ -45,4 +45,17 @@ class NoticiaForm(forms.ModelForm):
         '''
         model = Noticia
         fields = ['titulo', 'subtitulo', 'conteudo', 'imagem', 'categorias', 'fonte_informacao']
+
+class ComentarioForm(forms.ModelForm):
+    '''
+    Formulário de comentário da notícia
+    '''
+    class Meta:
+        '''
+        Metamodelo
+        '''
+        model = Comentario
+        fields = ['conteudo']
+
+
     

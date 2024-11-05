@@ -34,6 +34,8 @@ urlpatterns = [
     path("register/", SignUpView.as_view(), name='registrar-usuario'),
     path('register/edit/user/<int:pk>', UserUpdateView.as_view(), name='atualizar-usuario'),
     path('register/edit/password/<int:pk>', ChangePasswordView.as_view(), name='atualizar-senha'),
+    path('comentario/noticia/', views.add_comentario, name='adicionar-comentario'),
+
 
     # Área de Editores e Autores
     path("adm/noticias/", NoticiasListView.as_view(), name="noticias"),
