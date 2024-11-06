@@ -1,7 +1,7 @@
 
 <img src="https://github.com/AleDevir/jornal24horas/blob/main/staticfiles/img/logo.jpg" width='200' style="border-radius: 100;"/>
 
-## ${\color {#03b6fc} Jornal \ 24 \ Horas}$  
+# ${\color {#751f12} J\color {#bda9a6} ornal \ 24 \ Horas}$  
 
 ### Links Úteis:
 + [![Python](https://img.shields.io/badge/Python-blue)](https://www.python.org/downloads/)
