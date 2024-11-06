@@ -6,10 +6,8 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import (
     MyUser,
-    # Categoria,
     Noticia,
     UserAction,
-    # Comentario
 )
 
 class NoticiaAdmin(admin.ModelAdmin):
@@ -59,25 +57,7 @@ class CategoriaAdmin(admin.ModelAdmin):
 
     search_fields = ['nome']
 
-# class ComentarioAdmin(admin.ModelAdmin):
-#     '''
-#     ComentarioAdmin
-#     '''
-#     list_display = [
-#         'usuario',
-#         'criado_em',
-#         'noticia',
-#         'conteudo',
-        
-#     ]
-
-#     def save_model(self, request, obj, form, change):
-#         if not obj.pk:
-#             obj.usuario = request.user
-#         super().save_model(request, obj, form, change)
-
 
 admin.site.register(MyUser, UserAdmin)
 admin.site.register(Noticia, NoticiaAdmin)
 admin.site.register(UserAction, UserActionAdmin)
-# admin.site.register(Comentario, ComentarioAdmin)
