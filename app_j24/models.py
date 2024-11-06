@@ -127,7 +127,7 @@ class Comentario(models.Model):
     '''
     conteudo= models.TextField('Conteúdo', max_length=3000, default='')
     usuario = models.ForeignKey(MyUser, on_delete=models.RESTRICT, editable=False)
-    noticia = models.ForeignKey(Noticia, on_delete=models.RESTRICT)
+    noticia = models.ForeignKey(Noticia, on_delete=models.RESTRICT, editable=False)
     criado_em = models.DateTimeField('Criado', help_text='dd/mm/yyyy hh:MM', auto_now_add=True)
 
     class Meta:
