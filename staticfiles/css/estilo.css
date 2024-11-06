@@ -42,8 +42,7 @@
     }
     .responsive-padding {
       padding: 0px 180px 0px 180px;
-    }
-   
+    } 
 }
   
 @media (min-width: 1280px) {
@@ -62,6 +61,15 @@
     .responsive-padding {
       padding: 0px 280px 0px 280px;
     }
+}
+
+.logo {
+  color: #bda9a6;
+}
+.logo::first-letter {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: brown;
 }
 
 

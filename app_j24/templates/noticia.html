@@ -81,6 +81,22 @@
             </div>
         </div>
     </div>
+    {% elif not user.is_authenticated %}
+    <div class="d-flex col-auto  justify-content-center mt-5 accordion responsive" id="accordionExample">
+        <div class="shadow-lg p-3 mb-5 rounded w-100 accordion-item">
+            <h2 class="accordion-header ">
+                <button class="accordion-button teste-info responsive" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Comentários
+                </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse " data-bs-parent="#accordionExample">
+                <p class="mt-3 text-center">Acesse sua Conta no J24Horas e participe da conversa. <a
+                        href="{% url 'login' %}" class="text-info ms-2 text-decoration-none">
+                        Clique Aqui para fazer login</a></p>
+            </div>
+        </div>
+    </div>
     {% endif %}
 
     <div class=" mt-5 mb-3  rounded" style="background-color: #343638; padding: 20px;">
