@@ -10,6 +10,7 @@
 {% static 'icones/log.png' as log_url %}
 {% static 'icones/categoria.png' as categoria_url %}
 {% static 'icones/logout.png' as logout_url %}
+{% static 'img/logo.jpg' as logo_url %}
 {% static 'css/estilo.css' as css_url %}
 <!DOCTYPE html>
 <html lang="en">
@@ -29,10 +30,10 @@
 </head>
 
 <body data-bs-theme="dark">
-    <div class="sticky-top bg-body border-bottom border-info">
+    <div class="sticky-top bg-body border-bottom border-info ">
         <div class="hstack d-flex">
             <a href="{% url 'home' %}">
-                <div class="text-ligth m-3 p-2 rounded-circle btn btn-outline-info">J24</div>
+                <img src="{{ logo_url}}" width="90" height="90" class="text-ligth m-3 p-2 rounded-circle " />
             </a>
             {% if user.is_authenticated %}
             <div class="dropdown ms-auto px-4">
