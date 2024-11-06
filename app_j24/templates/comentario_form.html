@@ -2,9 +2,6 @@
 {% load django_bootstrap5 %}
 
 
-
-
-
 <div class="accordion-body" style="padding: 0;">
     <p class="text-info mt-3">{{ user.get_username|capfirst }}</p>
     <form method="post" action="{% url 'adicionar-comentario' %}">
