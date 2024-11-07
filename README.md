@@ -3,7 +3,7 @@
 
 # ${\color {#751f12} J\color {#bda9a6} ornal \ 24 \ Horas}$  
 
-[Jornal 24Horas](https://jornal24horas.onrender.com)
+Na web: [Jornal 24Horas](https://jornal24horas.onrender.com)
 
 ### Links Úteis:
 + [![Python](https://img.shields.io/badge/Python-blue)](https://www.python.org/downloads/)
